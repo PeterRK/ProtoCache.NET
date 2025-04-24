@@ -1,0 +1,26 @@
+﻿
+namespace ProtoCache {
+    public struct Int64Value : IUnit {
+        private long value;
+
+        public readonly long Value {
+            get { return value; }
+        }
+
+        public Int64Value() {
+            value = 0;
+        }
+
+        public void Init(ReadOnlyMemory<byte> data) {
+            if (data.IsEmpty) {
+                value = 0;
+                return;
+            }
+            value = BitConverter.ToInt64(data.Span);
+        }
+
+        public void InitByField(ReadOnlyMemory<byte> data) {
+            Init(data);
+        }
+    }
+}

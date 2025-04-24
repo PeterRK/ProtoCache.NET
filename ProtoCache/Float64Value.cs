@@ -1,0 +1,26 @@
+﻿
+namespace ProtoCache {
+    public struct Float64Value : IUnit {
+        private double value;
+
+        public readonly double Value {
+            get { return value; }
+        }
+
+        public Float64Value() {
+            value = 0;
+        }
+
+        public void Init(ReadOnlyMemory<byte> data) {
+            if (data.IsEmpty) {
+                value = 0;
+                return;
+            }
+            value = BitConverter.ToDouble(data.Span);
+        }
+
+        public void InitByField(ReadOnlyMemory<byte> data) {
+            Init(data);
+        }
+    }
+}

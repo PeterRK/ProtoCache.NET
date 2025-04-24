@@ -1,0 +1,18 @@
+﻿
+namespace ProtoCache {
+    public class StringArray : ArrayType {
+        private string[] list = [];
+
+        public string Get(int idx) {
+            if (list[idx] == null) {
+                list[idx] = StringValue.Extract(IUnit.Jump(At(idx)));
+            }
+            return list[idx];
+        }
+
+        public override void Init(ReadOnlyMemory<byte> data) {
+            base.Init(data);
+            list = new string[Size];
+        }
+    }
+}
