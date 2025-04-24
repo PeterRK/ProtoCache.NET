@@ -189,6 +189,9 @@ namespace ProtoCache {
         private static byte[]? SerializeField(FieldDescriptor field, object value) {
             switch (field.FieldType) {
                 case FieldType.Message: {
+                        if (value == null) {
+                            return null;
+                        }
                         var data = Serialize((IMessage)value);
                         if (data.Length == 4) {
                             return null;

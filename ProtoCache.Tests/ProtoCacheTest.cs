@@ -34,7 +34,7 @@ namespace ProtoCache.Tests {
 
             Assert.That(root.U64v.Size, Is.EqualTo(1));
             Assert.That(root.U64v.Get(0), Is.EqualTo(12345678987654321UL));
-            
+
             var expectedStrv = new string[] {
                 "abc", "apple", "banana", "orange", "pear", "grape",
                 "strawberry", "cherry", "mango", "watermelon"};
@@ -102,6 +102,18 @@ namespace ProtoCache.Tests {
             val = root.Arrays.Value(idx);
             Assert.That(val.Get(0), Is.EqualTo(51));
             Assert.That(val.Get(1), Is.EqualTo(52));
+        }
+
+        [Test]
+        public void AliasTest() {
+            var text = File.ReadAllText("test-alias.json");
+            var message = JsonParser.Default.Parse(text, pb.Main.Descriptor);
+            var raw = ProtoCache.Serialize(message);
+            Assert.That(raw.Length, Is.EqualTo(68));
+
+            Assert.That(BitConverter.ToUInt32(raw, 20), Is.EqualTo(0xd));
+            Assert.That(BitConverter.ToUInt32(raw, 24), Is.EqualTo(1));
+            Assert.That(BitConverter.ToUInt32(raw, 28), Is.EqualTo(1));
         }
     }
 }
