@@ -7,9 +7,7 @@ using System.Text;
 namespace ProtoCache {
     public class StringDict<T> : DictType<T>
         where T : IUnit, new() {
-        public string Key(int idx) {
-            return StringValue.Extract(IUnit.Jump(KeyAt(idx)));
-        }
+        public string Key(int idx) => StringValue.Extract(IUnit.Jump(KeyAt(idx)));
 
         public int Find(string key) {
             int idx = index.Locate(Encoding.UTF8.GetBytes(key));

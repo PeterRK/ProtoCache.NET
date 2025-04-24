@@ -141,16 +141,13 @@ namespace ProtoCache {
             return BitConverter.ToDouble(field.Span);
         }
 
-        public readonly byte[] GetBytes(int id) {
-            return IUnit.NewByField<BytesValue>(GetField(id)).Value;
-        }
+        public readonly byte[] GetBytes(int id)
+            => IUnit.NewByField<BytesValue>(GetField(id)).Value;
 
-        public readonly string GetString(int id) {
-            return IUnit.NewByField<StringValue>(GetField(id)).Value;
-        }
+        public readonly string GetString(int id)
+            => IUnit.NewByField<StringValue>(GetField(id)).Value;
 
-        public readonly T GetObject<T>(int id) where T : IUnit, new() {
-            return IUnit.NewByField<T>(GetField(id));
-        }
+        public readonly T GetObject<T>(int id) where T : IUnit, new()
+            => IUnit.NewByField<T>(GetField(id));
     }
 }

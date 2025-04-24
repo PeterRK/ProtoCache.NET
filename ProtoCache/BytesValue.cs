@@ -6,9 +6,7 @@ namespace ProtoCache {
     public struct BytesValue : IUnit {
         private byte[] value;
 
-        public readonly byte[] Value {
-            get { return value; }
-        }
+        public readonly byte[] Value => value;
 
         public BytesValue() {
             value = [];

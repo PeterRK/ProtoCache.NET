@@ -6,9 +6,7 @@ namespace ProtoCache {
     public struct Int64Value : IUnit {
         private long value;
 
-        public readonly long Value {
-            get { return value; }
-        }
+        public readonly long Value => value;
 
         public Int64Value() {
             value = 0;

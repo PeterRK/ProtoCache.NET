@@ -8,13 +8,9 @@ namespace ProtoCache {
         protected int width = 4;
         protected ReadOnlyMemory<byte> body = null;
 
-        public int Size {
-            get { return size; }
-        }
+        public int Size => size;
 
-        protected ReadOnlyMemory<byte> At(int idx) {
-            return body[(idx*width)..];
-        }
+        protected ReadOnlyMemory<byte> At(int idx) => body[(idx*width)..];
 
         public override void Init(ReadOnlyMemory<byte> data) {
             if (data.IsEmpty) {

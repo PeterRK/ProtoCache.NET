@@ -6,9 +6,7 @@ namespace ProtoCache {
     public struct BoolValue : IUnit {
         private bool value;
 
-        public readonly bool Value {
-            get { return value; }
-        }
+        public readonly bool Value => value;
 
         public BoolValue() {
             value = false;

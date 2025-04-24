@@ -8,9 +8,7 @@ namespace ProtoCache {
     public struct StringValue : IUnit {
         private string value;
 
-        public readonly string Value {
-            get { return value; }
-        }
+        public readonly string Value => value;
 
         public StringValue() {
             value = "";

@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoCache", "ProtoCache\Pr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoCache.Tests", "ProtoCache.Tests\ProtoCache.Tests.csproj", "{6BD19117-4E31-4D5B-8786-59BB2E559778}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtoCache.Benchmark", "ProtoCache.Benchmark\ProtoCache.Benchmark.csproj", "{8764DC98-F539-4284-9D94-72532DAB51CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{6BD19117-4E31-4D5B-8786-59BB2E559778}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BD19117-4E31-4D5B-8786-59BB2E559778}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BD19117-4E31-4D5B-8786-59BB2E559778}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8764DC98-F539-4284-9D94-72532DAB51CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8764DC98-F539-4284-9D94-72532DAB51CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8764DC98-F539-4284-9D94-72532DAB51CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8764DC98-F539-4284-9D94-72532DAB51CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

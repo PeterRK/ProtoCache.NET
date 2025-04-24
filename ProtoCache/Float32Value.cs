@@ -6,9 +6,7 @@ namespace ProtoCache {
     public struct Float32Value : IUnit {
         private float value;
 
-        public readonly float Value {
-            get { return value; }
-        }
+        public readonly float Value => value;
 
         public Float32Value() {
             value = 0;

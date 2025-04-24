@@ -4,29 +4,24 @@
 
 namespace ProtoCache {
     public class Float32Array : IUnit.Object {
-        private int size = 0;
-        private ReadOnlyMemory<byte> body = null;
+        private ReadOnlyMemory<byte> data = ReadOnlyMemory<byte>.Empty;
+        private const int width = 4;
 
-        public int Size {
-            get { return size; }
-        }
+        public int Size => data.Length / width;
 
-        public float Get(int idx) {
-            return BitConverter.ToSingle(body.Span[(idx*4)..]);
-        }
+        public float Get(int idx) => BitConverter.ToSingle(data.Span[(idx * width)..]);
 
         public override void Init(ReadOnlyMemory<byte> data) {
             if (data.IsEmpty) {
-                size = 0;
-                body = null;
+                this.data = ReadOnlyMemory<byte>.Empty;
                 return;
             }
             uint mark = BitConverter.ToUInt32(data.Span);
-            if ((mark & 3) != 1) {
-                throw new ArgumentException("illegal float array");
+            if ((mark & 3) != width / 4) {
+                throw new ArgumentException("illegal int32 array");
             }
-            size = (int)(mark >> 2);
-            body = data[4..];
+            var size = (int)(mark >> 2);
+            this.data = data[4..(4 + size * width)];
         }
     }
 }

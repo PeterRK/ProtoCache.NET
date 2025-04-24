@@ -4,26 +4,18 @@
 
 namespace ProtoCache {
     public class BoolArray : IUnit.Object {
-        private bool[] value = [];
+        private ReadOnlyMemory<byte> body = ReadOnlyMemory<byte>.Empty;
 
-        public int Size {
-            get { return value.Length; }
-        }
+        public int Size => body.Length;
 
-        public bool Get(int idx) {
-            return value[idx];
-        }
+        public bool Get(int idx) => body.Span[idx] != 0;
 
         public override void Init(ReadOnlyMemory<byte> data) {
             if (data.IsEmpty) {
-                value = [];
+                body = ReadOnlyMemory<byte>.Empty;
                 return;
             }
-            var view = BytesValue.Extract(data);
-            value = new bool[view.Length];
-            for (int i = 0; i < view.Length; i++) {
-                value[i] = view[i] != 0;
-            }
+            body = BytesValue.Extract(data);
         }
     }
 }

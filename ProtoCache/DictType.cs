@@ -11,9 +11,7 @@ namespace ProtoCache {
         protected PerfectHash index = empty;
         protected ReadOnlyMemory<byte> body = null;
 
-        public int Size {
-            get { return index != null? index.Size : 0; }
-        }
+        public int Size => index.Size;
 
         protected ReadOnlyMemory<byte> KeyAt(int idx) {
             var offset = idx * (keyWidth + valueWidth);
@@ -25,9 +23,7 @@ namespace ProtoCache {
             return body[offset..];
         }
 
-        public T Value(int idx) {
-            return IUnit.NewByField<T>(ValueAt(idx));
-        }
+        public T Value(int idx) => IUnit.NewByField<T>(ValueAt(idx));
 
         public override void Init(ReadOnlyMemory<byte> data) {
             if (data.IsEmpty) {

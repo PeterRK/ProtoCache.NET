@@ -6,9 +6,7 @@ namespace ProtoCache {
     public struct UInt64Value : IUnit {
         private ulong value;
 
-        public readonly ulong Value {
-            get { return value; }
-        }
+        public readonly ulong Value => value;
 
         public UInt64Value() {
             value = 0;
