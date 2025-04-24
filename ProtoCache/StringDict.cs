@@ -1,4 +1,8 @@
-﻿using System.Text;
+﻿// Copyright (c) 2025, Ruan Kunliang.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+using System.Text;
 
 namespace ProtoCache {
     public class StringDict<T> : DictType<T>

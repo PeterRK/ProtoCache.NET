@@ -1,4 +1,8 @@
-﻿namespace ProtoCache {
+﻿// Copyright (c) 2025, Ruan Kunliang.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+namespace ProtoCache {
     public sealed class Hash {
         public struct V128(ulong low, ulong high) {
             public ulong low = low;
