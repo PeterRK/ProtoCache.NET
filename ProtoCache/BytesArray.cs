@@ -4,17 +4,7 @@
 
 namespace ProtoCache {
     public class BytesArray : ArrayType {
-        private byte[][] list = [];
-        public byte[] Get(int idx) {
-            if (list[idx] == null) {
-                list[idx] = BytesValue.Extract(IUnit.Jump(At(idx)));
-            }
-            return list[idx];
-        }
-
-        public override void Init(ReadOnlyMemory<byte> data) {
-            base.Init(data);
-            list = new byte[Size][];
-        }
+        public override void Init(DataView data) => Init(data, 0);
+        public byte[] Get(int idx) => Bytes.ExtractBytes(IUnit.Jump(At(idx)));
     }
 }

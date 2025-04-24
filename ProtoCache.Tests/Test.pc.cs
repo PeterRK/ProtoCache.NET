@@ -6,16 +6,16 @@ public class Mode {
 	public const int MODE_C = 2;
 }
 
-public class Small : global::ProtoCache.IUnit.Object {
+public class Small : global::ProtoCache.IUnit {
 	public const int _i32 = 0;
 	public const int _flag = 1;
 	public const int _str = 3;
 
 	private global::ProtoCache.Message _core_;
 	public Small() {}
-	public Small(ReadOnlyMemory<byte> data) { Init(data); }
-	public bool HasField(int id) { return _core_.HasField(id); }
-	public override void Init(ReadOnlyMemory<byte> data) {
+	public Small(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(int id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		str_ = null;
 	}
@@ -35,13 +35,13 @@ public class Vec2D : global::ProtoCache.ObjectArray<global::ProtoCache.Tests.pc.
 
 }
 
-public class ArrMap : global::ProtoCache.StringDict<global::ProtoCache.Tests.pc.ArrMap.Array> {
+public class ArrMap : global::ProtoCache.StringDict.ObjectValue<global::ProtoCache.Tests.pc.ArrMap.Array> {
 	public class Array : global::ProtoCache.Float32Array {
 	}
 
 }
 
-public class Main : global::ProtoCache.IUnit.Object {
+public class Main : global::ProtoCache.IUnit {
 	public const int _i32 = 0;
 	public const int _u32 = 1;
 	public const int _i64 = 2;
@@ -76,9 +76,9 @@ public class Main : global::ProtoCache.IUnit.Object {
 
 	private global::ProtoCache.Message _core_;
 	public Main() {}
-	public Main(ReadOnlyMemory<byte> data) { Init(data); }
-	public bool HasField(int id) { return _core_.HasField(id); }
-	public override void Init(ReadOnlyMemory<byte> data) {
+	public Main(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(int id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		str_ = null;
 		data_ = null;
@@ -168,14 +168,14 @@ public class Main : global::ProtoCache.IUnit.Object {
 	public ulong TU64 => _core_.GetUInt64(_t_u64);
 	public long TI64 => _core_.GetInt64(_t_i64);
 	public long TS64 => _core_.GetInt64(_t_s64);
-	private global::ProtoCache.StringDict<global::ProtoCache.Int32Value>? index_ = null;
-	public global::ProtoCache.StringDict<global::ProtoCache.Int32Value> Index { get {
-		index_ ??= _core_.GetObject<global::ProtoCache.StringDict<global::ProtoCache.Int32Value>>(_index);
+	private global::ProtoCache.StringDict.Int32Value? index_ = null;
+	public global::ProtoCache.StringDict.Int32Value Index { get {
+		index_ ??= _core_.GetObject<global::ProtoCache.StringDict.Int32Value>(_index);
 		return index_;
 	}}
-	private global::ProtoCache.Int32Dict<global::ProtoCache.Tests.pc.Small>? objects_ = null;
-	public global::ProtoCache.Int32Dict<global::ProtoCache.Tests.pc.Small> Objects { get {
-		objects_ ??= _core_.GetObject<global::ProtoCache.Int32Dict<global::ProtoCache.Tests.pc.Small>>(_objects);
+	private global::ProtoCache.Int32Dict.ObjectValue<global::ProtoCache.Tests.pc.Small>? objects_ = null;
+	public global::ProtoCache.Int32Dict.ObjectValue<global::ProtoCache.Tests.pc.Small> Objects { get {
+		objects_ ??= _core_.GetObject<global::ProtoCache.Int32Dict.ObjectValue<global::ProtoCache.Tests.pc.Small>>(_objects);
 		return objects_;
 	}}
 	private global::ProtoCache.Tests.pc.Vec2D? matrix_ = null;
@@ -200,15 +200,15 @@ public class Main : global::ProtoCache.IUnit.Object {
 	}}
 }
 
-public class CyclicA : global::ProtoCache.IUnit.Object {
+public class CyclicA : global::ProtoCache.IUnit {
 	public const int _value = 0;
 	public const int _cyclic = 1;
 
 	private global::ProtoCache.Message _core_;
 	public CyclicA() {}
-	public CyclicA(ReadOnlyMemory<byte> data) { Init(data); }
-	public bool HasField(int id) { return _core_.HasField(id); }
-	public override void Init(ReadOnlyMemory<byte> data) {
+	public CyclicA(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(int id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		cyclic_ = null;
 	}
@@ -221,15 +221,15 @@ public class CyclicA : global::ProtoCache.IUnit.Object {
 	}}
 }
 
-public class CyclicB : global::ProtoCache.IUnit.Object {
+public class CyclicB : global::ProtoCache.IUnit {
 	public const int _value = 0;
 	public const int _cyclic = 1;
 
 	private global::ProtoCache.Message _core_;
 	public CyclicB() {}
-	public CyclicB(ReadOnlyMemory<byte> data) { Init(data); }
-	public bool HasField(int id) { return _core_.HasField(id); }
-	public override void Init(ReadOnlyMemory<byte> data) {
+	public CyclicB(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(int id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		cyclic_ = null;
 	}
@@ -242,21 +242,22 @@ public class CyclicB : global::ProtoCache.IUnit.Object {
 	}}
 }
 
-public class Deprecated : global::ProtoCache.IUnit.Object {
-	public class Valid : global::ProtoCache.IUnit.Object {
+public class Deprecated : global::ProtoCache.IUnit {
+	public class Valid : global::ProtoCache.IUnit {
 		public const int _val = 0;
 
 		private global::ProtoCache.Message _core_;
 		public Valid() {}
-		public Valid(ReadOnlyMemory<byte> data) { Init(data); }
-		public bool HasField(int id) { return _core_.HasField(id); }
-		public override void Init(ReadOnlyMemory<byte> data) {
+		public Valid(byte[] data) => Init(new global::ProtoCache.DataView(data));
+		public bool HasField(int id) => _core_.HasField(id);
+		public void Init(global::ProtoCache.DataView data) {
 			_core_.Init(data);
 		}
 
 		public int Val => _core_.GetInt32(_val);
 	}
 
+	public void Init(DataView data) => throw new NotImplementedException();
 }
 
 }

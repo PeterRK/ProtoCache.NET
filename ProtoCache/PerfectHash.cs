@@ -4,27 +4,28 @@
 
 using System.Collections;
 
+
 namespace ProtoCache {
     public sealed class PerfectHash {
-        private readonly ReadOnlyMemory<byte> data;
+        private readonly DataView data;
         private readonly int size;
+        private readonly int byteSize;
         private readonly int section;
 
-        public ReadOnlyMemory<byte> Data {
-            get { return data; }
-        }
-        public int Size {
-            get { return size;  }
-        }
+        public int Size => size;
+        public ReadOnlySpan<byte> Data => data.Span[..byteSize];
+        public int ByteSize => byteSize;
 
-        public PerfectHash(ReadOnlyMemory<byte> raw) {
-            if (raw.Length < 4) {
+        public PerfectHash(byte[] data) : this(new DataView(data)) {}
+        public PerfectHash(DataView data) {
+            if (data.Size < 4) {
                 throw new ArgumentException("too short data");
             }
-            size = BitConverter.ToInt32(raw.Span) & 0xfffffff;
+            size = data.GetInt32() & 0xfffffff;
             if (size < 2) {
+                byteSize = 4;
                 section = 0;
-                data = raw[..4];
+                this.data = data;
                 return;
             }
             section = CalcSectionSize(size);
@@ -36,15 +37,16 @@ namespace ProtoCache {
             } else if (size > 24) {
                 n += n / 8;
             }
-            var byteSize = n + 8;
-            if (raw.Length < byteSize) {
+            byteSize = n + 8;
+            if (data.Size < byteSize) {
                 throw new ArgumentException("too short data");
             }
-            data = raw[..byteSize];
+            this.data = data;
         }
 
-        private PerfectHash(Memory<byte> data, int size, int section) {
-            this.data = data;
+        private PerfectHash(byte[] data, int size, int section) {
+            this.data = new DataView(data);
+            this.byteSize = data.Length;
             this.size = size;
             this.section = section;
         }
@@ -76,10 +78,16 @@ namespace ProtoCache {
             return slots;
         }
 
+        private static int Bit2(DataView data, int pos) {
+            var blk = pos >>> 2;
+            var sft = (pos & 3) << 1;
+            return (data.GetByte(blk) >> sft) & 3;
+        }
+
         private static int Bit2(ReadOnlySpan<byte> data, int pos) {
             var blk = pos >>> 2;
             var sft = (pos & 3) << 1;
-            return (data[blk] >>> sft) & 3;
+            return (data[blk] >> sft) & 3;
         }
 
         private static void SetBit2on11(Span<byte> data, int pos, int val) {
@@ -173,10 +181,10 @@ namespace ProtoCache {
             if (size < 2) {
                 return 0;
             }
-            var slots = CalcSlots(BitConverter.ToUInt32(data[4..].Span), section, key);
+            var slots = CalcSlots(data.GetUInt32(4), section, key);
 
-            var bitmap = data[8..].Span;
-            var table = data[(8+CalcBitmapSize(section))..].Span;
+            var bitmap = data.Forward(8);
+            var table = bitmap.Forward(CalcBitmapSize(section));
 
             var m = Bit2(bitmap, slots[0]) + Bit2(bitmap, slots[1]) + Bit2(bitmap, slots[2]);
             var slot = slots[m % 3];
@@ -186,14 +194,14 @@ namespace ProtoCache {
 
             int off = 0;
             if (size > 0xffff) {
-                off = (int)BitConverter.ToUInt32(table[(a*4)..]);
+                off = (int)table.GetUInt32(a * 4);
             } else if (size > 0xff) {
-                off = (int)BitConverter.ToUInt16(table[(a*2)..]);
+                off = (int)table.GetUInt16(a * 2);
             } else if (size > 24) {
-                off = (int)table[a];
+                off = (int)table.GetByte(a);
             }
 
-            var block = BitConverter.ToUInt64(bitmap[(a*8)..]);
+            var block = bitmap.GetUInt64(a * 8);
             block |= 0xffffffffffffffffL << (b << 1);
             return off + CountValidSlot(block);
         }

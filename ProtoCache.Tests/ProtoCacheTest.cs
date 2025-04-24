@@ -73,10 +73,10 @@ namespace ProtoCache.Tests {
             Assert.That(root.Index.Size, Is.EqualTo(6));
             var idx = root.Index.Find("abc-1");
             Assert.That(idx, Is.GreaterThanOrEqualTo(0));
-            Assert.That(root.Index.Value(idx).Value, Is.EqualTo(1));
+            Assert.That(root.Index.Value(idx), Is.EqualTo(1));
             idx = root.Index.Find("abc-2");
             Assert.That(idx, Is.GreaterThanOrEqualTo(0));
-            Assert.That(root.Index.Value(idx).Value, Is.EqualTo(2));
+            Assert.That(root.Index.Value(idx), Is.EqualTo(2));
             Assert.That(root.Index.Find("abc-3"), Is.LessThan(0));
             Assert.That(root.Index.Find("abc-4"), Is.LessThan(0));
 

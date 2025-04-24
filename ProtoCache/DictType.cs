@@ -3,46 +3,39 @@
 // license that can be found in the LICENSE file.
 
 namespace ProtoCache {
-    public abstract class DictType<T> : IUnit.Object
-        where T : IUnit, new() {
+    public abstract class DictType : IUnit {
+        public abstract void Init(DataView data);
         private static readonly PerfectHash empty = new(new byte[4]);
-        protected int keyWidth = 4;
-        protected int valueWidth = 4;
+        private DataView body = DataView.Empty;
         protected PerfectHash index = empty;
-        protected ReadOnlyMemory<byte> body = null;
+        private int keyWidth = 0;
+        private int valueWidth = 0;
 
         public int Size => index.Size;
 
-        protected ReadOnlyMemory<byte> KeyAt(int idx) {
-            var offset = idx * (keyWidth + valueWidth);
-            return body[offset..];
-        }
+        protected DataView KeyAt(int idx) => body.Forward(idx * (keyWidth + valueWidth));
 
-        private ReadOnlyMemory<byte> ValueAt(int idx) {
-            var offset = idx * (keyWidth + valueWidth) + keyWidth;
-            return body[offset..];
-        }
+        protected DataView ValueAt(int idx) => body.Forward(idx * (keyWidth + valueWidth) + keyWidth);
 
-        public T Value(int idx) => IUnit.NewByField<T>(ValueAt(idx));
-
-        public override void Init(ReadOnlyMemory<byte> data) {
-            if (data.IsEmpty) {
-                keyWidth = 4;
-                valueWidth = 4;
+        protected void Init(DataView data, int keyWord, int valueWord) {
+            if (!data.IsValid) {
+                body = DataView.Empty;
                 index = empty;
-                body = null;
+                keyWidth = keyWord * 4;
+                valueWidth = valueWord * 4;
                 return;
             }
 
             index = new PerfectHash(data);
-            var bodyOffset = (int)((index.Data.Length + 3) & 0xfffffffc);
-            uint mark = BitConverter.ToUInt32(data.Span);
+            var bodyOffset = (int)((index.ByteSize + 3) & 0xfffffffc);
+            var mark = data.GetUInt32();
             keyWidth = (int)((mark >> 30) & 3) * 4;
             valueWidth = (int)((mark >> 28) & 3) * 4;
-            if (keyWidth == 0 || valueWidth == 0) {
+            if ((keyWord != 0 && keyWidth != keyWord * 4) || keyWidth == 0
+                || (valueWord != 0 && valueWidth != valueWord * 4) || valueWidth == 0) {
                 throw new ArgumentException("illegal map");
             }
-            body = data[bodyOffset..];
+            body = data.Forward(bodyOffset);
         }
     }
 }

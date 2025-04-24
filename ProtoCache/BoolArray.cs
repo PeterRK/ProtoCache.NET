@@ -3,19 +3,20 @@
 // license that can be found in the LICENSE file.
 
 namespace ProtoCache {
-    public class BoolArray : IUnit.Object {
-        private ReadOnlyMemory<byte> body = ReadOnlyMemory<byte>.Empty;
+    public class BoolArray : IUnit {
+
+        private byte[] body = [];
 
         public int Size => body.Length;
 
-        public bool Get(int idx) => body.Span[idx] != 0;
+        public bool Get(int idx) => body[idx] != 0;
 
-        public override void Init(ReadOnlyMemory<byte> data) {
-            if (data.IsEmpty) {
-                body = ReadOnlyMemory<byte>.Empty;
+        public void Init(DataView data) {
+            if (!data.IsValid) {
+                body = [];
                 return;
             }
-            body = BytesValue.Extract(data);
+            body = Bytes.ExtractBytes(data);
         }
     }
 }

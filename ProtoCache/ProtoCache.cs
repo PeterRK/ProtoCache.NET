@@ -162,13 +162,9 @@ namespace ProtoCache {
             return data;
         }
 
-        private static byte[] Serialize(string value) {
-            return Serialize(Encoding.UTF8.GetBytes(value));
-        }
+        private static byte[] Serialize(string value) => Serialize(Encoding.UTF8.GetBytes(value));
 
-        private static byte[] Serialize(ByteString value) {
-            return Serialize(value.ToByteArray());
-        }
+        private static byte[] Serialize(ByteString value) => Serialize(value.ToByteArray());
 
         private static byte[] Serialize(byte[] value) {
             if (value.Length >= (1 << 28)) {
@@ -592,7 +588,7 @@ namespace ProtoCache {
                 outValues[pos] = values[i];
             }
 
-            int indexSize = (index.Data.Length + 3) / 4;
+            int indexSize = (index.ByteSize + 3) / 4;
             var k = DetectBestArray(outKeys);
             var v = DetectBestArray(outValues);
 
@@ -651,23 +647,13 @@ namespace ProtoCache {
             protected byte[][] data = data;
             protected int idx = 0;
 
-            public void Reset() {
-                idx = 0;
-            }
-
-            public int Total() {
-                return data.Length;
-            }
-
-            public virtual ReadOnlySpan<byte> Next() {
-                return data[idx++];
-            }
+            public void Reset() => idx = 0;
+            public int Total() => data.Length;
+            public virtual ReadOnlySpan<byte> Next() => data[idx++];
         }
 
         private class StrReader(byte[][] data) : SimpleReader(data) {
-            public override ReadOnlySpan<byte> Next() {
-                return BytesValue.ExtractRaw(data[idx++]).Span;
-            }
+            public override ReadOnlySpan<byte> Next() => Bytes.ExtractRaw(data[idx++].AsSpan());
         }
     }
 }

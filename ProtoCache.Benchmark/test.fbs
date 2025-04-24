@@ -1,4 +1,4 @@
-namespace test;
+namespace ProtoCache.Tests.fb;
 
 enum Mode : byte {
 	MODE_A = 0,
@@ -20,13 +20,13 @@ table Vec2D {
 	_:[Vec1D];
 }
 
-table Array {
+table Array_ {
 	_:[float];
 }
 
 table ArrMapEntry {
 	key:string(key);
-	value:Array;
+	value:Array_;
 }
 
 table ArrMap {
@@ -43,7 +43,7 @@ table Map2Entry {
 	value:Small;
 }
 
-table Bytes {
+table Bytes_ {
 	_:[byte];
 }
 
@@ -62,7 +62,7 @@ table Main {
 	i32v:[int32];
 	u64v:[uint64];
 	strv:[string];
-	datav:[Bytes];
+	datav:[Bytes_];
 	f32v:[float];
 	f64v:[double];
 	flags:[bool];

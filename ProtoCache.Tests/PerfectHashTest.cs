@@ -41,26 +41,13 @@ namespace ProtoCache.Tests {
             DoTest(100000);
         }
 
-        private class Reader : PerfectHash.IKeySource {
-            private readonly byte[][] keys;
+        private class Reader(byte[][] keys) : PerfectHash.IKeySource {
+            private readonly byte[][] keys = keys;
             int current = 0;
 
-            public Reader(byte[][] keys) {
-                this.keys = keys;
-            }
-
-
-            public void Reset() {
-                current = 0;
-            }
-
-            public int Total() {
-                return keys.Length;
-            }
-
-            public ReadOnlySpan<byte> Next() {
-                return keys[current++];
-            }
+            public void Reset() => current = 0;
+            public int Total() => keys.Length;
+            public ReadOnlySpan<byte> Next() => keys[current++];
         }
 }
 

@@ -3,29 +3,30 @@
 // license that can be found in the LICENSE file.
 
 namespace ProtoCache {
-    public class ArrayType : IUnit.Object {
-        protected int size = 0;
-        protected int width = 4;
-        protected ReadOnlyMemory<byte> body = null;
+    public abstract class ArrayType : IUnit {
+        public abstract void Init(DataView data);
+        private DataView body = DataView.Empty;
+        private int size = 0;
+        private int width = 0;
 
         public int Size => size;
 
-        protected ReadOnlyMemory<byte> At(int idx) => body[(idx*width)..];
+        protected DataView At(int idx) => body.Forward(idx*width);
 
-        public override void Init(ReadOnlyMemory<byte> data) {
-            if (data.IsEmpty) {
+        protected void Init(DataView data, int word) {
+            if (!data.IsValid) {
                 size = 0;
-                width = 4;
-                body = null;
+                width = word * 4;
+                body = DataView.Empty;
                 return;
             }
-            uint mark = BitConverter.ToUInt32(data.Span);
-            if ((mark & 3) == 0) {
+            var mark = data.GetUInt32();
+            if ((word != 0 && (mark & 3) != word) || (mark & 3) == 0) {
                 throw new ArgumentException("illegal array");
             }
             size = (int)(mark >> 2);
             width = (int)(mark & 3) * 4;
-            body = data[4..];
+            body = data.Forward(4);
         }
     }
 }

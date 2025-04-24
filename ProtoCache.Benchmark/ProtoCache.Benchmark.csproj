@@ -4,7 +4,9 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <Nullable>warnings</Nullable>
+    <Platforms>AnyCPU;x64</Platforms>
+    <PublishAot>True</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ProtoCache.Tests\ProtoCache.Tests.csproj" />
     <ProjectReference Include="..\ProtoCache\ProtoCache.csproj" />
   </ItemGroup>
 

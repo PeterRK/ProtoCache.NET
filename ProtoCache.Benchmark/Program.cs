@@ -5,17 +5,30 @@
 using System.Diagnostics;
 using pb = global::ProtoCache.Tests.pb;
 using pc = global::ProtoCache.Tests.pc;
+using fb = global::ProtoCache.Tests.fb;
 
 namespace ProtoCache.Benchmark {
     public class Program {
-
         private const int loop = 1000000;
 
         public static void Main(string[] args) {
             var timer = new Stopwatch();
 
-            var raw = File.ReadAllBytes("test.pb");
+            var raw = File.ReadAllBytes("test.pc");
             var junk = new Junk();
+            for (int i = 0; i < loop; i++) {
+                junk.Traverse(new pc.Main(raw));
+            }
+            timer.Restart();
+            for (int i = 0; i < loop; i++) {
+                junk.Traverse(new pc.Main(raw));
+            }
+            timer.Stop();
+            junk.Print();
+            Console.Write("protocache: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
+
+            raw = File.ReadAllBytes("test.pb");
+            junk = new Junk();
             for (int i = 0; i < loop; i++) {
                 junk.Traverse(pb.Main.Parser.ParseFrom(raw));
             }
@@ -27,18 +40,20 @@ namespace ProtoCache.Benchmark {
             junk.Print();
             Console.Write("protobuf: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
 
-            raw = File.ReadAllBytes("test.pc");
+            raw = File.ReadAllBytes("test.fb");
             junk = new Junk();
             for (int i = 0; i < loop; i++) {
-                junk.Traverse(new pc.Main(raw));
+                var root = fb.Main.GetRootAsMain(new Google.FlatBuffers.ByteBuffer(raw));
+                junk.Traverse(root);
             }
             timer.Restart();
             for (int i = 0; i < loop; i++) {
-                junk.Traverse(new pc.Main(raw));
+                var root = fb.Main.GetRootAsMain(new Google.FlatBuffers.ByteBuffer(raw));
+                junk.Traverse(root);
             }
             timer.Stop();
             junk.Print();
-            Console.Write("protocache: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
+            Console.Write("flatbuffers: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
         }
 
         private class Junk {
@@ -47,176 +62,194 @@ namespace ProtoCache.Benchmark {
             private long i64 = 0;
             private double f64 = 0;
 
-            public void Print() {
-                Console.Write("{0:X} {1:X}, {2}, {3}\n", i32, i64, f32, f64);
-            }
+            public void Print() => Console.Write("{0:X} {1:X}, {2}, {3}\n", i32, i64, f32, f64);
 
-            private void consume(int v) {
-                i32 += v;
-            }
-            private void consume(uint v) {
-                i32 += (int)v;
-            }
-            private void consume(long v) {
-                i64 += v;
-            }
-            private void consume(ulong v) {
-                i64 += (long)v;
-            }
-            private void consume(float v) {
-                f32 += v;
-            }
-            private void consume(double v) {
-                f64 += v;
-            }
-            private void consume(bool v) {
+            private void Consume(int v) => i32 += v;
+            private void Consume(uint v) => i32 += (int)v;
+            private void Consume(long v) => i64 += v;
+            private void Consume(ulong v) => i64 += (long)v;
+            private void Consume(float v) => f32 += v;
+            private void Consume(double v) => f64 += v;
+            private void Consume(bool v) {
                 if (v) {
                     i32 += 1;
                 }
             }
-            private void consume(string v) {
+            private void Consume(string v) {
+                if (v == null || v.Length == 0) {
+                    return;
+                }
                 i32 += v.GetHashCode();
             }
-            private void consume(byte[] v) {
+            private void Consume(byte[] v) {
+                if (v == null) {
+                    return;
+                }
                 i32 += v.Length;
             }
 
+            private readonly pc.Small tmpSmall = new();
+            private readonly pc.ArrMap tmpArrMap = new();
+            private readonly pc.ArrMap.Array tmpArray = new();
+            private readonly pc.Vec2D.Vec1D tmpVec1D = new();
+
             public void Traverse(pc.Main root) {
-                consume(root.I32);
-                consume(root.U32);
-                consume(root.I64);
-                consume(root.U64);
-                consume(root.Flag);
-                consume(root.Mode);
-                consume(root.Str);
-                consume(root.Data);
-                consume(root.F32);
-                consume(root.F64);
+                TraverseA(root);
+                TraverseB(root);
+                TraverseC(root);
+            }
+
+
+            public void TraverseA(pc.Main root) {
+                Consume(root.I32);
+                Consume(root.U32);
+                Consume(root.I64);
+                Consume(root.U64);
+                Consume(root.Flag);
+                Consume(root.Mode);
+                Consume(root.Str);
+                Consume(root.Data);
+                Consume(root.F32);
+                Consume(root.F64);
                 Traverse(root.Object);
+                Consume(root.TU32);
+                Consume(root.TI32);
+                Consume(root.TS32);
+                Consume(root.TU64);
+                Consume(root.TI64);
+                Consume(root.TS64);
+            }
+
+            public void TraverseB(pc.Main root) {
                 for (int i = 0; i < root.I32V.Size; i++) {
-                    consume(root.I32V.Get(i));
+                    Consume(root.I32V.Get(i));
                 }
                 for (int i = 0; i < root.U64V.Size; i++) {
-                    consume(root.U64V.Get(i));
+                    Consume(root.U64V.Get(i));
                 }
                 for (int i = 0; i < root.Strv.Size; i++) {
-                    consume(root.Strv.Get(i));
+                    Consume(root.Strv.Get(i));
                 }
                 for (int i = 0; i < root.Datav.Size; i++) {
-                    consume(root.Datav.Get(i));
+                    Consume(root.Datav.Get(i));
                 }
                 for (int i = 0; i < root.F32V.Size; i++) {
-                    consume(root.F32V.Get(i));
+                    Consume(root.F32V.Get(i));
                 }
                 for (int i = 0; i < root.F64V.Size; i++) {
-                    consume(root.F64V.Get(i));
+                    Consume(root.F64V.Get(i));
                 }
                 for (int i = 0; i < root.Flags.Size; i++) {
-                    consume(root.Flags.Get(i));
+                    Consume(root.Flags.Get(i));
                 }
                 for (int i = 0; i < root.Objectv.Size; i++) {
-                    Traverse(root.Objectv.Get(i));
+                    Traverse(root.Objectv.Get(i, tmpSmall));
                 }
+            }
 
-                consume(root.TU32);
-                consume(root.TI32);
-                consume(root.TS32);
-                consume(root.TU64);
-                consume(root.TI64);
-                consume(root.TS64);
-
+            public void TraverseC(pc.Main root) {
                 for (int i = 0; i < root.Index.Size; i++) {
-                    consume(root.Index.Key(i));
-                    consume(root.Index.Value(i).Value);
+                    Consume(root.Index.Key(i));
+                    Consume(root.Index.Value(i));
                 }
                 for (int i = 0; i < root.Objects.Size; i++) {
-                    consume(root.Objects.Key(i));
-                    Traverse(root.Objects.Value(i));
+                    Consume(root.Objects.Key(i));
+                    Traverse(root.Objects.Value(i, tmpSmall));
                 }
 
                 Traverse(root.Matrix);
 
                 for (int i = 0; i < root.Vector.Size; i++) {
-                    Traverse(root.Vector.Get(i));
+                    Traverse(root.Vector.Get(i, tmpArrMap));
                 }
                 Traverse(root.Arrays);
             }
 
             void Traverse(pc.Small root) {
-                consume(root.I32);
-                consume(root.Flag);
-                consume(root.Str);
+                Consume(root.I32);
+                Consume(root.Flag);
+                Consume(root.Str);
             }
 
             void Traverse(pc.ArrMap map) {
                 for (int i = 0; i < map.Size; i++) {
-                    consume(map.Key(i));
-                    var value = map.Value(i);
+                    Consume(map.Key(i));
+                    var value = map.Value(i, tmpArray);
                     for (int j = 0; j < value.Size; j++) {
-                        consume(value.Get(j));
+                        Consume(value.Get(j));
                     }
                 }
             }
 
             void Traverse(pc.Vec2D vec) {
                 for (int i = 0; i < vec.Size; i++) {
-                    var line = vec.Get(i);
+                    var line = vec.Get(i, tmpVec1D);
                     for (int j = 0; j < vec.Size; j++) {
-                        consume(line.Get(j));
+                        Consume(line.Get(j));
                     }
                 }
             }
 
             public void Traverse(pb.Main root) {
-                consume(root.I32);
-                consume(root.U32);
-                consume(root.I64);
-                consume(root.U64);
-                consume(root.Flag);
-                consume((int)root.Mode);
-                consume(root.Str);
-                consume(root.Data.ToByteArray());
-                consume(root.F32);
-                consume(root.F64);
+                TraverseA(root);
+                TraverseB(root);
+                TraverseC(root);
+            }
+
+            public void TraverseA(pb.Main root) {
+                Consume(root.I32);
+                Consume(root.U32);
+                Consume(root.I64);
+                Consume(root.U64);
+                Consume(root.Flag);
+                Consume((int)root.Mode);
+                Consume(root.Str);
+                Consume(root.Data.ToByteArray());
+                Consume(root.F32);
+                Consume(root.F64);
                 Traverse(root.Object);
+                Consume(root.TU32);
+                Consume(root.TI32);
+                Consume(root.TS32);
+                Consume(root.TU64);
+                Consume(root.TI64);
+                Consume(root.TS64);
+            }
+
+            public void TraverseB(pb.Main root) {
                 foreach (var u in root.I32V) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.U64V) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.Strv) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.Datav) {
-                    consume(u.ToByteArray());
+                    Consume(u.ToByteArray());
                 }
                 foreach (var u in root.F32V) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.F64V) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.Flags) {
-                    consume(u);
+                    Consume(u);
                 }
                 foreach (var u in root.Objectv) {
                     Traverse(u);
                 }
+            }
 
-                consume(root.TU32);
-                consume(root.TI32);
-                consume(root.TS32);
-                consume(root.TU64);
-                consume(root.TI64);
-                consume(root.TS64);
-
+            public void TraverseC(pb.Main root) {
                 foreach (var u in root.Index) {
-                    consume(u.Key);
-                    consume(u.Value);
+                    Consume(u.Key);
+                    Consume(u.Value);
                 }
                 foreach (var u in root.Objects) {
-                    consume(u.Key);
+                    Consume(u.Key);
                     Traverse(u.Value);
                 }
 
@@ -229,16 +262,16 @@ namespace ProtoCache.Benchmark {
             }
 
             void Traverse(pb.Small root) {
-                consume(root.I32);
-                consume(root.Flag);
-                consume(root.Str);
+                Consume(root.I32);
+                Consume(root.Flag);
+                Consume(root.Str);
             }
 
             void Traverse(pb.ArrMap map) {
                 foreach (var u in map.X) {
-                    consume(u.Key);
+                    Consume(u.Key);
                     foreach (var v in u.Value.X) {
-                        consume(v);
+                        Consume(v);
                     }
                 }
             }
@@ -246,7 +279,108 @@ namespace ProtoCache.Benchmark {
             void Traverse(pb.Vec2D vec) {
                 foreach (var u in vec.X) {
                     foreach (var v in u.X) {
-                        consume(v);
+                        Consume(v);
+                    }
+                }
+            }
+
+            public void Traverse(fb.Main root) {
+                TraverseA(root);
+                TraverseB(root);
+                TraverseC(root);
+            }
+
+            public void TraverseA(fb.Main root) {
+                Consume(root.I32);
+                Consume(root.U32);
+                Consume(root.I64);
+                Consume(root.U64);
+                Consume(root.Flag);
+                Consume((int)root.Mode);
+                Consume(root.Str);
+                Consume(root.DataLength);
+                Consume(root.F32);
+                Consume(root.F64);
+                Traverse(root.Object.Value);
+                Consume(root.TU32);
+                Consume(root.TI32);
+                Consume(root.TS32);
+                Consume(root.TU64);
+                Consume(root.TI64);
+                Consume(root.TS64);
+            }
+
+            public void TraverseB(fb.Main root) {
+                for (int i = 0; i < root.I32vLength; i++) {
+                    Consume(root.I32v(i));
+                }
+                for (int i = 0; i < root.U64vLength; i++) {
+                    Consume(root.U64v(i));
+                }
+                for (int i = 0; i < root.StrvLength; i++) {
+                    Consume(root.Strv(i));
+                }
+                for (int i = 0; i < root.DatavLength; i++) {
+                    Consume(root.Datav(i).Value._Length);
+                }
+                for (int i = 0; i < root.F32vLength; i++) {
+                    Consume(root.F32v(i));
+                }
+                for (int i = 0; i < root.F64vLength; i++) {
+                    Consume(root.F64v(i));
+                }
+                for (int i = 0; i < root.FlagsLength; i++) {
+                    Consume(root.Flags(i));
+                }
+
+                for (int i = 0; i < root.ObjectvLength; i++) {
+                    Traverse(root.Objectv(i).Value);
+                }
+            }
+
+            public void TraverseC(fb.Main root) {
+                for (int i = 0; i < root.IndexLength; i++) {
+                    var entry = root.Index(i).Value;
+                    Consume(entry.Key);
+                    Consume(entry.Value);
+                }
+                for (int i = 0; i < root.ObjectsLength; i++) {
+                    var entry = root.Objects(i).Value;
+                    Consume(entry.Key);
+                    Traverse(entry.Value.Value);
+                }
+
+                Traverse(root.Matrix.Value);
+
+                for (int i = 0; i < root.VectorLength; i++) {
+                    Traverse(root.Vector(i).Value);
+                }
+                Traverse(root.Arrays.Value);
+            }
+
+
+            void Traverse(fb.Small root) {
+                Consume(root.I32);
+                Consume(root.Flag);
+                Consume(root.Str);
+            }
+
+            void Traverse(fb.ArrMap map) {
+                for (int i = 0; i < map._Length; i++) {
+                    var entry = map._(i).Value;
+                    Consume(entry.Key);
+                    var value = entry.Value.Value;
+                    for (int j = 0; j < value._Length; j++) {
+                        Consume(value._(j));
+                    }
+                }
+            }
+
+            void Traverse(fb.Vec2D vec) {
+                for (int i = 0; i < vec._Length; i++) {
+                    var line = vec._(i).Value;
+                    for (int j = 0; j < vec._Length; j++) {
+                        Consume(line._(j));
                     }
                 }
             }
