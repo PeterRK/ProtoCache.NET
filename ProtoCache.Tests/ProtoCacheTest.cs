@@ -32,12 +32,12 @@ namespace ProtoCache.Tests {
             Assert.That(root.Object.Flag, Is.False);
             Assert.That(root.Object.Str, Is.EqualTo("tmp"));
 
-            Assert.That(root.I32v.Size, Is.EqualTo(2));
-            Assert.That(root.I32v.Get(0), Is.EqualTo(1));
-            Assert.That(root.I32v.Get(1), Is.EqualTo(2));
+            Assert.That(root.I32V.Size, Is.EqualTo(2));
+            Assert.That(root.I32V.Get(0), Is.EqualTo(1));
+            Assert.That(root.I32V.Get(1), Is.EqualTo(2));
 
-            Assert.That(root.U64v.Size, Is.EqualTo(1));
-            Assert.That(root.U64v.Get(0), Is.EqualTo(12345678987654321UL));
+            Assert.That(root.U64V.Size, Is.EqualTo(1));
+            Assert.That(root.U64V.Get(0), Is.EqualTo(12345678987654321UL));
 
             var expectedStrv = new string[] {
                 "abc", "apple", "banana", "orange", "pear", "grape",
@@ -47,14 +47,14 @@ namespace ProtoCache.Tests {
                 Assert.That(root.Strv.Get(i), Is.EqualTo(expectedStrv[i]));
             }
 
-            Assert.That(root.F32v.Size, Is.EqualTo(2));
-            Assert.That(root.F32v.Get(0), Is.EqualTo(1.1f));
-            Assert.That(root.F32v.Get(1), Is.EqualTo(2.2f));
+            Assert.That(root.F32V.Size, Is.EqualTo(2));
+            Assert.That(root.F32V.Get(0), Is.EqualTo(1.1f));
+            Assert.That(root.F32V.Get(1), Is.EqualTo(2.2f));
 
             var expectedF64v = new double[] { 9.9, 8.8, 7.7, 6.6, 5.5 };
-            Assert.That(root.F64v.Size, Is.EqualTo(expectedF64v.Length));
+            Assert.That(root.F64V.Size, Is.EqualTo(expectedF64v.Length));
             for (int i = 0; i < expectedF64v.Length; i++) {
-                Assert.That(root.F64v.Get(i), Is.EqualTo(expectedF64v[i]));
+                Assert.That(root.F64V.Get(i), Is.EqualTo(expectedF64v[i]));
             }
 
             var expectedFlags = new bool[] { true, true, false, true, false, false, false };

@@ -26,8 +26,10 @@ namespace ProtoCache {
             return data;
         }
 
-        public abstract class Object : IUnit {
-            public abstract void Init(ReadOnlyMemory<byte> data);
+        public class Object : IUnit {
+            public virtual void Init(ReadOnlyMemory<byte> data) {
+                throw new NotImplementedException();
+            }
             public void InitByField(ReadOnlyMemory<byte> data) {
                 Init(Jump(data));
             }
