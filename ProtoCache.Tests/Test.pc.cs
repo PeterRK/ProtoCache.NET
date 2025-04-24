@@ -20,8 +20,8 @@ public class Small : global::ProtoCache.IUnit.Object {
 		str_ = null;
 	}
 
-	public int I32 { get { return _core_.GetInt32(_i32); } }
-	public bool Flag { get { return _core_.GetBool(_flag); } }
+	public int I32 => _core_.GetInt32(_i32);
+	public bool Flag => _core_.GetBool(_flag);
 	private string? str_ = null;
 	public string Str { get {
 		str_ ??= _core_.GetString(_str);
@@ -99,12 +99,12 @@ public class Main : global::ProtoCache.IUnit.Object {
 		modev_ = null;
 	}
 
-	public int I32 { get { return _core_.GetInt32(_i32); } }
-	public uint U32 { get { return _core_.GetUInt32(_u32); } }
-	public long I64 { get { return _core_.GetInt64(_i64); } }
-	public ulong U64 { get { return _core_.GetUInt64(_u64); } }
-	public bool Flag { get { return _core_.GetBool(_flag); } }
-	public int Mode { get { return _core_.GetInt32(_mode); } }
+	public int I32 => _core_.GetInt32(_i32);
+	public uint U32 => _core_.GetUInt32(_u32);
+	public long I64 => _core_.GetInt64(_i64);
+	public ulong U64 => _core_.GetUInt64(_u64);
+	public bool Flag => _core_.GetBool(_flag);
+	public int Mode => _core_.GetInt32(_mode);
 	private string? str_ = null;
 	public string Str { get {
 		str_ ??= _core_.GetString(_str);
@@ -115,8 +115,8 @@ public class Main : global::ProtoCache.IUnit.Object {
 		data_ ??= _core_.GetBytes(_data);
 		return data_;
 	}}
-	public float F32 { get { return _core_.GetFloat32(_f32); } }
-	public double F64 { get { return _core_.GetFloat64(_f64); } }
+	public float F32 => _core_.GetFloat32(_f32);
+	public double F64 => _core_.GetFloat64(_f64);
 	private global::ProtoCache.Tests.pc.Small? object_ = null;
 	public global::ProtoCache.Tests.pc.Small Object { get {
 		object_ ??= _core_.GetObject<global::ProtoCache.Tests.pc.Small>(_object);
@@ -162,12 +162,12 @@ public class Main : global::ProtoCache.IUnit.Object {
 		objectv_ ??= _core_.GetObject<global::ProtoCache.ObjectArray<global::ProtoCache.Tests.pc.Small>>(_objectv);
 		return objectv_;
 	}}
-	public uint TU32 { get { return _core_.GetUInt32(_t_u32); } }
-	public int TI32 { get { return _core_.GetInt32(_t_i32); } }
-	public int TS32 { get { return _core_.GetInt32(_t_s32); } }
-	public ulong TU64 { get { return _core_.GetUInt64(_t_u64); } }
-	public long TI64 { get { return _core_.GetInt64(_t_i64); } }
-	public long TS64 { get { return _core_.GetInt64(_t_s64); } }
+	public uint TU32 => _core_.GetUInt32(_t_u32);
+	public int TI32 => _core_.GetInt32(_t_i32);
+	public int TS32 => _core_.GetInt32(_t_s32);
+	public ulong TU64 => _core_.GetUInt64(_t_u64);
+	public long TI64 => _core_.GetInt64(_t_i64);
+	public long TS64 => _core_.GetInt64(_t_s64);
 	private global::ProtoCache.StringDict<global::ProtoCache.Int32Value>? index_ = null;
 	public global::ProtoCache.StringDict<global::ProtoCache.Int32Value> Index { get {
 		index_ ??= _core_.GetObject<global::ProtoCache.StringDict<global::ProtoCache.Int32Value>>(_index);
@@ -213,7 +213,7 @@ public class CyclicA : global::ProtoCache.IUnit.Object {
 		cyclic_ = null;
 	}
 
-	public int Value { get { return _core_.GetInt32(_value); } }
+	public int Value => _core_.GetInt32(_value);
 	private global::ProtoCache.Tests.pc.CyclicB? cyclic_ = null;
 	public global::ProtoCache.Tests.pc.CyclicB Cyclic { get {
 		cyclic_ ??= _core_.GetObject<global::ProtoCache.Tests.pc.CyclicB>(_cyclic);
@@ -234,7 +234,7 @@ public class CyclicB : global::ProtoCache.IUnit.Object {
 		cyclic_ = null;
 	}
 
-	public int Value { get { return _core_.GetInt32(_value); } }
+	public int Value => _core_.GetInt32(_value);
 	private global::ProtoCache.Tests.pc.CyclicA? cyclic_ = null;
 	public global::ProtoCache.Tests.pc.CyclicA Cyclic { get {
 		cyclic_ ??= _core_.GetObject<global::ProtoCache.Tests.pc.CyclicA>(_cyclic);
@@ -243,7 +243,7 @@ public class CyclicB : global::ProtoCache.IUnit.Object {
 }
 
 public class Deprecated : global::ProtoCache.IUnit.Object {
-        public class Valid : global::ProtoCache.IUnit.Object {
+	public class Valid : global::ProtoCache.IUnit.Object {
 		public const int _val = 0;
 
 		private global::ProtoCache.Message _core_;
@@ -254,7 +254,7 @@ public class Deprecated : global::ProtoCache.IUnit.Object {
 			_core_.Init(data);
 		}
 
-		public int Val { get { return _core_.GetInt32(_val); } }
+		public int Val => _core_.GetInt32(_val);
 	}
 
 }
