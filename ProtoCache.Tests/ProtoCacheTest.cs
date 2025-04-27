@@ -4,6 +4,7 @@
 
 using Google.Protobuf;
 using System.Text;
+using static Google.Protobuf.Reflection.FeatureSet.Types;
 
 namespace ProtoCache.Tests {
     public class ProtoCacheTest {
@@ -118,6 +119,20 @@ namespace ProtoCache.Tests {
             Assert.That(BitConverter.ToUInt32(raw, 20), Is.EqualTo(0xd));
             Assert.That(BitConverter.ToUInt32(raw, 24), Is.EqualTo(1));
             Assert.That(BitConverter.ToUInt32(raw, 28), Is.EqualTo(1));
+        }
+
+
+        [Test]
+        public void CompressTest() {
+            var text = File.ReadAllText("test.json");
+            var message = JsonParser.Default.Parse(text, pb.Main.Descriptor);
+            var raw = ProtoCache.Serialize(message);
+
+            var compressed = Utils.Compress(raw);
+            Assert.That(compressed.Length, Is.Not.EqualTo(0));
+            Assert.That(compressed.Length, Is.LessThan(raw.Length));
+            var back = Utils.Decompress(compressed);
+            Assert.That(back, Is.EqualTo(raw));
         }
     }
 }

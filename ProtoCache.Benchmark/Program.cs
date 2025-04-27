@@ -15,6 +15,24 @@ namespace ProtoCache.Benchmark {
             var timer = new Stopwatch();
 
             var raw = File.ReadAllBytes("test.pc");
+            for (int i = 0; i < loop; i++) {
+                Utils.Decompress(Utils.Compress(raw));
+            }
+            timer.Restart();
+            for (int i = 0; i < loop; i++) {
+                Utils.Compress(raw);
+            }
+            timer.Stop();
+            Console.Write("compress: {0} ns\n", timer.Elapsed.TotalNanoseconds / loop);
+
+            var compressed = Utils.Compress(raw);
+            timer.Restart();
+            for (int i = 0; i < loop; i++) {
+                Utils.Decompress(compressed);
+            }
+            timer.Stop();
+            Console.Write("decompress: {0} ns\n", timer.Elapsed.TotalNanoseconds / loop);
+
             var junk = new Junk();
             for (int i = 0; i < loop; i++) {
                 junk.Traverse(new pc.Main(raw));
