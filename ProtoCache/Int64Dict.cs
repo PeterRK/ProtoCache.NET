@@ -7,7 +7,7 @@ using System;
 namespace ProtoCache {
     public abstract class Int64Dict : DictType {
         protected void Init(DataView data, int word) => Init(data, 2, word);
-        public int Key(int idx) => KeyAt(idx).GetInt32();
+        public long Key(int idx) => KeyAt(idx).GetInt64();
 
         public int Find(long key) {
             int idx = index.Locate(BitConverter.GetBytes(key));

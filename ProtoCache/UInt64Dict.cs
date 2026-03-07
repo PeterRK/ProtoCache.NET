@@ -5,9 +5,9 @@
 namespace ProtoCache {
     public abstract class UInt64Dict : DictType {
         protected void Init(DataView data, int word) => Init(data, 2, word);
-        public int Key(int idx) => KeyAt(idx).GetInt32();
+        public ulong Key(int idx) => KeyAt(idx).GetUInt64();
 
-        public int Find(long key) {
+        public int Find(ulong key) {
             int idx = index.Locate(BitConverter.GetBytes(key));
             if (idx >= index.Size || key != Key(idx)) {
                 return -1;

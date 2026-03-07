@@ -7,14 +7,14 @@ public class Mode {
 }
 
 public class Small : global::ProtoCache.IUnit {
-	public const int _i32 = 0;
-	public const int _flag = 1;
-	public const int _str = 3;
+	public const ushort _i32 = 0;
+	public const ushort _flag = 1;
+	public const ushort _str = 3;
 
 	private global::ProtoCache.Message _core_;
 	public Small() {}
 	public Small(byte[] data) => Init(new global::ProtoCache.DataView(data));
-	public bool HasField(int id) => _core_.HasField(id);
+	public bool HasField(ushort id) => _core_.HasField(id);
 	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		str_ = null;
@@ -42,42 +42,42 @@ public class ArrMap : global::ProtoCache.StringDict.ObjectValue<global::ProtoCac
 }
 
 public class Main : global::ProtoCache.IUnit {
-	public const int _i32 = 0;
-	public const int _u32 = 1;
-	public const int _i64 = 2;
-	public const int _u64 = 3;
-	public const int _flag = 4;
-	public const int _mode = 5;
-	public const int _str = 6;
-	public const int _data = 7;
-	public const int _f32 = 8;
-	public const int _f64 = 9;
-	public const int _object = 10;
-	public const int _i32v = 11;
-	public const int _u64v = 12;
-	public const int _strv = 13;
-	public const int _datav = 14;
-	public const int _f32v = 15;
-	public const int _f64v = 16;
-	public const int _flags = 17;
-	public const int _objectv = 18;
-	public const int _t_u32 = 19;
-	public const int _t_i32 = 20;
-	public const int _t_s32 = 21;
-	public const int _t_u64 = 22;
-	public const int _t_i64 = 23;
-	public const int _t_s64 = 24;
-	public const int _index = 25;
-	public const int _objects = 26;
-	public const int _matrix = 27;
-	public const int _vector = 28;
-	public const int _arrays = 29;
-	public const int _modev = 31;
+	public const ushort _i32 = 0;
+	public const ushort _u32 = 1;
+	public const ushort _i64 = 2;
+	public const ushort _u64 = 3;
+	public const ushort _flag = 4;
+	public const ushort _mode = 5;
+	public const ushort _str = 6;
+	public const ushort _data = 7;
+	public const ushort _f32 = 8;
+	public const ushort _f64 = 9;
+	public const ushort _object = 10;
+	public const ushort _i32v = 11;
+	public const ushort _u64v = 12;
+	public const ushort _strv = 13;
+	public const ushort _datav = 14;
+	public const ushort _f32v = 15;
+	public const ushort _f64v = 16;
+	public const ushort _flags = 17;
+	public const ushort _objectv = 18;
+	public const ushort _t_u32 = 19;
+	public const ushort _t_i32 = 20;
+	public const ushort _t_s32 = 21;
+	public const ushort _t_u64 = 22;
+	public const ushort _t_i64 = 23;
+	public const ushort _t_s64 = 24;
+	public const ushort _index = 25;
+	public const ushort _objects = 26;
+	public const ushort _matrix = 27;
+	public const ushort _vector = 28;
+	public const ushort _arrays = 29;
+	public const ushort _modev = 31;
 
 	private global::ProtoCache.Message _core_;
 	public Main() {}
 	public Main(byte[] data) => Init(new global::ProtoCache.DataView(data));
-	public bool HasField(int id) => _core_.HasField(id);
+	public bool HasField(ushort id) => _core_.HasField(id);
 	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		str_ = null;
@@ -201,13 +201,13 @@ public class Main : global::ProtoCache.IUnit {
 }
 
 public class CyclicA : global::ProtoCache.IUnit {
-	public const int _value = 0;
-	public const int _cyclic = 1;
+	public const ushort _value = 0;
+	public const ushort _cyclic = 1;
 
 	private global::ProtoCache.Message _core_;
 	public CyclicA() {}
 	public CyclicA(byte[] data) => Init(new global::ProtoCache.DataView(data));
-	public bool HasField(int id) => _core_.HasField(id);
+	public bool HasField(ushort id) => _core_.HasField(id);
 	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		cyclic_ = null;
@@ -222,13 +222,13 @@ public class CyclicA : global::ProtoCache.IUnit {
 }
 
 public class CyclicB : global::ProtoCache.IUnit {
-	public const int _value = 0;
-	public const int _cyclic = 1;
+	public const ushort _value = 0;
+	public const ushort _cyclic = 1;
 
 	private global::ProtoCache.Message _core_;
 	public CyclicB() {}
 	public CyclicB(byte[] data) => Init(new global::ProtoCache.DataView(data));
-	public bool HasField(int id) => _core_.HasField(id);
+	public bool HasField(ushort id) => _core_.HasField(id);
 	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		cyclic_ = null;
@@ -244,12 +244,12 @@ public class CyclicB : global::ProtoCache.IUnit {
 
 public class Deprecated : global::ProtoCache.IUnit {
 	public class Valid : global::ProtoCache.IUnit {
-		public const int _val = 0;
+		public const ushort _val = 0;
 
 		private global::ProtoCache.Message _core_;
 		public Valid() {}
 		public Valid(byte[] data) => Init(new global::ProtoCache.DataView(data));
-		public bool HasField(int id) => _core_.HasField(id);
+		public bool HasField(ushort id) => _core_.HasField(id);
 		public void Init(global::ProtoCache.DataView data) {
 			_core_.Init(data);
 		}

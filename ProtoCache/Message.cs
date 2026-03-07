@@ -19,7 +19,7 @@ namespace ProtoCache {
         }
 
 
-        public readonly bool HasField(int id) {
+        public readonly bool HasField(ushort id) {
             var header = data.GetUInt32();
             int section = (byte)header;
             if (id < 12) {
@@ -55,7 +55,7 @@ namespace ProtoCache {
             return (int)v & 0xff;
         }
 
-        private readonly DataView GetField(int id) {
+        private readonly DataView GetField(ushort id) {
             var header = data.GetUInt32();
             int section = (byte)header;
             int off = 1 + section * 2;
@@ -85,7 +85,7 @@ namespace ProtoCache {
             return data.Forward(off * 4);
         }
 
-        public readonly bool GetBool(int id) {
+        public readonly bool GetBool(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return false;
@@ -93,7 +93,7 @@ namespace ProtoCache {
             return field.Span[0] != 0;
         }
 
-        public readonly int GetInt32(int id) {
+        public readonly int GetInt32(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -101,7 +101,7 @@ namespace ProtoCache {
             return field.GetInt32();
         }
 
-        public readonly long GetInt64(int id) {
+        public readonly long GetInt64(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -109,7 +109,7 @@ namespace ProtoCache {
             return field.GetInt64();
         }
 
-        public readonly uint GetUInt32(int id) {
+        public readonly uint GetUInt32(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -117,7 +117,7 @@ namespace ProtoCache {
             return field.GetUInt32();
         }
 
-        public readonly ulong GetUInt64(int id) {
+        public readonly ulong GetUInt64(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -125,7 +125,7 @@ namespace ProtoCache {
             return field.GetUInt64();
         }
 
-        public readonly float GetFloat32(int id) {
+        public readonly float GetFloat32(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -133,7 +133,7 @@ namespace ProtoCache {
             return field.GetFloat32();
         }
 
-        public readonly double GetFloat64(int id) {
+        public readonly double GetFloat64(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return 0;
@@ -141,7 +141,7 @@ namespace ProtoCache {
             return field.GetFloat64();
         }
 
-        public readonly byte[] GetBytes(int id) {
+        public readonly byte[] GetBytes(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return [];
@@ -149,7 +149,7 @@ namespace ProtoCache {
             return Bytes.ExtractBytes(IUnit.Jump(field));
         }
 
-        public readonly string GetString(int id) {
+        public readonly string GetString(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
                 return "";
@@ -157,7 +157,7 @@ namespace ProtoCache {
             return Bytes.ExtractString(IUnit.Jump(field));
         }
 
-        public readonly T GetObject<T>(int id) where T : class, IUnit, new() {
+        public readonly T GetObject<T>(ushort id) where T : class, IUnit, new() {
             var field = GetField(id);
             if (!field.IsValid) {
                 var unit = new T();

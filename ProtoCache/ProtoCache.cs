@@ -472,8 +472,7 @@ namespace ProtoCache {
                         break;
                     }
                 case FieldType.Fixed32:
-                case FieldType.UInt32:
-                case FieldType.SFixed32: {
+                case FieldType.UInt32: {
                         var raw = dict.Keys.Cast<uint>().ToList();
                         for (int i = 0; i < raw.Count; i++) {
                             keys[i] = BitConverter.GetBytes(raw[i]);
@@ -481,6 +480,7 @@ namespace ProtoCache {
                         reader = new SimpleReader(keys);
                         break;
                     }
+                case FieldType.SFixed32:
                 case FieldType.SInt32:
                 case FieldType.Int32: {
                         var raw = dict.Keys.Cast<int>().ToList();

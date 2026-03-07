@@ -111,20 +111,8 @@ namespace ProtoCache {
             }
         }
 
-        public static byte[] Decompress(byte[] src) {
-            if (src.Length == 0) {
-                return [];
-            }
-            int k = 0;
-            int size = 0;
-            for (int sft = 0; sft < 32; sft += 7) {
-                byte b = src[k++];
-                size |= ((int)b & 0x7f) << sft;
-                if ((b & 0x80) == 0) {
-                    break;
-                }
-            }
-            DecompressContext context = new(src, k, size);
+        private static byte[] Decompress(byte[] src, int off, int size) {
+            DecompressContext context = new(src, off, size);
             while (context.k < src.Length) {
                 int mark = src[context.k++] & 0xff;
                 if (!context.Unpack(mark & 0xf) || !context.Unpack(mark >> 4)) {
@@ -135,6 +123,22 @@ namespace ProtoCache {
                 throw new ArgumentException("size mismatch");
             }
             return context.output;
+        }
+
+        public static byte[] Decompress(byte[] src) {
+            if (src.Length == 0) {
+                return [];
+            }
+            int k = 0;
+            int size = 0;
+            for (int sft = 0; sft < 32; sft += 7) {
+                byte b = src[k++];
+                size |= ((int)b & 0x7f) << sft;
+                if ((b & 0x80) == 0) {
+                    return Decompress(src, k, size);
+                }
+            }
+            throw new ArgumentException("broken data");
         }
     }
 }
