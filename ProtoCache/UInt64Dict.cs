@@ -2,13 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+using System.Buffers.Binary;
+
 namespace ProtoCache {
     public abstract class UInt64Dict : DictType {
         protected void Init(DataView data, int word) => Init(data, 2, word);
         public ulong Key(int idx) => KeyAt(idx).GetUInt64();
 
         public int Find(ulong key) {
-            int idx = index.Locate(BitConverter.GetBytes(key));
+            Span<byte> raw = stackalloc byte[8];
+            BinaryPrimitives.WriteUInt64LittleEndian(raw, key);
+            int idx = index.Locate(raw);
             if (idx >= index.Size || key != Key(idx)) {
                 return -1;
             }

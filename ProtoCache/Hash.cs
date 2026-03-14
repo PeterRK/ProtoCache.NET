@@ -1,23 +1,32 @@
-﻿// Copyright (c) 2025, Ruan Kunliang.
+﻿// Copyright (c) 2023, Ruan Kunliang.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+using System.Buffers.Binary;
+
 namespace ProtoCache {
     public sealed class Hash {
-        public struct V128(ulong low, ulong high) {
-            public ulong low = low;
-            public ulong high = high;
-        }
-
-        static Hash() {
-            System.Diagnostics.Trace.Assert(BitConverter.IsLittleEndian);
+        public struct V128 {
+            public ulong low;
+            public ulong high;
+            public V128(ulong low, ulong high) {
+                this.low = low;
+                this.high = high;
+            }
         }
 
         private static ulong Rot(ulong x, int k) {
             return (x << k) | (x >>> (64 - k));
         }
-        private struct State(ulong a, ulong b, ulong c, ulong d) {
-            public ulong a = a, b = b, c = c, d = d;
+        private struct State {
+            public ulong a, b, c, d;
+
+            public State(ulong a, ulong b, ulong c, ulong d) {
+                this.a = a;
+                this.b = b;
+                this.c = c;
+                this.d = d;
+            }
 
             public void Mix() {
                 c = Rot(c, 50); c += d; a ^= c;
@@ -55,15 +64,15 @@ namespace ProtoCache {
 
             int off = 0;
             for (int end = key.Length & ~0x1f; off < end; off += 32) {
-                s.c += BitConverter.ToUInt64(key[off..]);
-                s.d += BitConverter.ToUInt64(key[(off + 8)..]);
+                s.c += BinaryPrimitives.ReadUInt64LittleEndian(key[off..]);
+                s.d += BinaryPrimitives.ReadUInt64LittleEndian(key[(off + 8)..]);
                 s.Mix();
-                s.a += BitConverter.ToUInt64(key[(off + 16)..]);
-                s.b += BitConverter.ToUInt64(key[(off + 24)..]);
+                s.a += BinaryPrimitives.ReadUInt64LittleEndian(key[(off + 16)..]);
+                s.b += BinaryPrimitives.ReadUInt64LittleEndian(key[(off + 24)..]);
             }
             if (key.Length - off >= 16) {
-                s.c += BitConverter.ToUInt64(key[off..]);
-                s.d += BitConverter.ToUInt64(key[(off + 8)..]);
+                s.c += BinaryPrimitives.ReadUInt64LittleEndian(key[off..]);
+                s.d += BinaryPrimitives.ReadUInt64LittleEndian(key[(off + 8)..]);
                 s.Mix();
                 off += 16;
             }
@@ -80,8 +89,8 @@ namespace ProtoCache {
                     s.d += ((ulong)key[off + 12]) << 32;
                     goto case 12;
                 case 12:
-                    s.d += BitConverter.ToUInt32(key[(off + 8)..]);
-                    s.c += BitConverter.ToUInt64(key[off..]);
+                    s.d += BinaryPrimitives.ReadUInt32LittleEndian(key[(off + 8)..]);
+                    s.c += BinaryPrimitives.ReadUInt64LittleEndian(key[off..]);
                     break;
                 case 11:
                     s.d += ((ulong)key[off + 10]) << 16;
@@ -93,7 +102,7 @@ namespace ProtoCache {
                     s.d += key[off + 8];
                     goto case 8;
                 case 8:
-                    s.c += BitConverter.ToUInt64(key[off..]);
+                    s.c += BinaryPrimitives.ReadUInt64LittleEndian(key[off..]);
                     break;
                 case 7:
                     s.c += ((ulong)key[off + 6]) << 48;
@@ -105,7 +114,7 @@ namespace ProtoCache {
                     s.c += ((ulong)key[off + 4]) << 32;
                     goto case 4;
                 case 4:
-                    s.c += BitConverter.ToUInt32(key[off..]);
+                    s.c += BinaryPrimitives.ReadUInt32LittleEndian(key[off..]);
                     break;
                 case 3:
                     s.c += ((ulong)key[off + 2]) << 16;

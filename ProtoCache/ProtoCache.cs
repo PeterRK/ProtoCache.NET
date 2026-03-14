@@ -5,10 +5,47 @@
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
 using System.Collections;
+using System.Buffers.Binary;
 using System.Text;
 
 namespace ProtoCache {
     public sealed class ProtoCache {
+        private static byte[] Int32Bytes(int value) {
+            var data = new byte[4];
+            BinaryPrimitives.WriteInt32LittleEndian(data, value);
+            return data;
+        }
+
+        private static byte[] UInt32Bytes(uint value) {
+            var data = new byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(data, value);
+            return data;
+        }
+
+        private static byte[] Int64Bytes(long value) {
+            var data = new byte[8];
+            BinaryPrimitives.WriteInt64LittleEndian(data, value);
+            return data;
+        }
+
+        private static byte[] UInt64Bytes(ulong value) {
+            var data = new byte[8];
+            BinaryPrimitives.WriteUInt64LittleEndian(data, value);
+            return data;
+        }
+
+        private static byte[] Float32Bytes(float value) {
+            var data = new byte[4];
+            BinaryPrimitives.WriteSingleLittleEndian(data, value);
+            return data;
+        }
+
+        private static byte[] Float64Bytes(double value) {
+            var data = new byte[8];
+            BinaryPrimitives.WriteDoubleLittleEndian(data, value);
+            return data;
+        }
+
         public static byte[] Serialize(IMessage message) {
             var descriptor = message.Descriptor;
             var originFields = descriptor.Fields.InFieldNumberOrder();
@@ -49,9 +86,9 @@ namespace ProtoCache {
                 if (unit == null) {
                     unit = new byte[4];
                     if (fields[0].IsMap) {
-                        BitConverter.TryWriteBytes(unit, (uint)5 << 28);
+                        BinaryPrimitives.WriteUInt32LittleEndian(unit, (uint)5 << 28);
                     } else {
-                        BitConverter.TryWriteBytes(unit, (uint)1);
+                        BinaryPrimitives.WriteUInt32LittleEndian(unit, (uint)1);
                     }
                 }
                 return unit;
@@ -62,7 +99,7 @@ namespace ProtoCache {
             }
             if (parts.Count == 0) {
                 var unit = new byte[4];
-                BitConverter.TryWriteBytes(unit, (uint)0);
+                BinaryPrimitives.WriteUInt32LittleEndian(unit, 0);
                 return unit;
             }
 
@@ -104,7 +141,7 @@ namespace ProtoCache {
                 }
             }
             var data = new byte[size * 4];
-            BitConverter.TryWriteBytes(data, head);
+            BinaryPrimitives.WriteUInt32LittleEndian(data, head);
 
             int off = 4;
             for (int i = 12; i < parts.Count;) {
@@ -126,7 +163,7 @@ namespace ProtoCache {
                         cnt += 1;
                     }
                 }
-                BitConverter.TryWriteBytes(data.AsSpan()[off..], mark);
+                BinaryPrimitives.WriteUInt64LittleEndian(data.AsSpan()[off..], mark);
                 off += 8;
             }
 
@@ -150,7 +187,7 @@ namespace ProtoCache {
                 if (one.Length / 4 < 4) {
                     off += one.Length;
                 } else {
-                    BitConverter.TryWriteBytes(data.AsSpan()[off..], (uint)(tail - off) | 3);
+                    BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan()[off..], (uint)(tail - off) | 3);
                     Array.Copy(one, 0, data, tail, one.Length);
                     tail += one.Length;
                     off += 4;
@@ -162,17 +199,32 @@ namespace ProtoCache {
             return data;
         }
 
-        private static byte[] Serialize(string value) => Serialize(Encoding.UTF8.GetBytes(value));
+        private static byte[] Serialize(string value) {
+            int byteCount = Encoding.UTF8.GetByteCount(value);
+            if (byteCount == 0) {
+                return Serialize(ReadOnlySpan<byte>.Empty);
+            }
+            byte[] data = CreateBytesUnit(byteCount, out int prefixSize);
+            Encoding.UTF8.GetBytes(value.AsSpan(), data.AsSpan(prefixSize, byteCount));
+            return data;
+        }
 
-        private static byte[] Serialize(ByteString value) => Serialize(value.ToByteArray());
+        private static byte[] Serialize(ByteString value) => Serialize(value.Span);
 
-        private static byte[] Serialize(byte[] value) {
+        private static byte[] Serialize(byte[] value) => Serialize(value.AsSpan());
+
+        private static byte[] Serialize(ReadOnlySpan<byte> value) {
             if (value.Length >= (1 << 28)) {
                 throw new ArgumentException("too long string");
             }
+            byte[] data = CreateBytesUnit(value.Length, out int prefixSize);
+            value.CopyTo(data.AsSpan(prefixSize, value.Length));
+            return data;
+        }
 
+        private static byte[] CreateBytesUnit(int length, out int prefixSize) {
             var tmp = new byte[5];
-            var mark = (uint)value.Length << 2;
+            var mark = (uint)length << 2;
             int w = 0;
             while ((mark & ~0x7f) != 0) {
                 tmp[w++] = (byte)(0x80 | (mark & 0x7f));
@@ -180,9 +232,9 @@ namespace ProtoCache {
             }
             tmp[w++] = (byte)mark;
 
-            var data = new byte[((w + value.Length) + 3) & 0xfffffffc];
+            var data = new byte[((w + length) + 3) & 0xfffffffc];
             Array.Copy(tmp, 0, data, 0, w);
-            Array.Copy(value, 0, data, w, value.Length);
+            prefixSize = w;
             return data;
         }
 
@@ -217,14 +269,14 @@ namespace ProtoCache {
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return Float64Bytes(v);
                     }
                 case FieldType.Float: {
                         var v = (float)value;
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return Float32Bytes(v);
                     }
                 case FieldType.Fixed64:
                 case FieldType.UInt64: {
@@ -232,7 +284,7 @@ namespace ProtoCache {
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return UInt64Bytes(v);
                     }
                 case FieldType.Fixed32:
                 case FieldType.UInt32: {
@@ -240,7 +292,7 @@ namespace ProtoCache {
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return UInt32Bytes(v);
                     }
                 case FieldType.SFixed64:
                 case FieldType.SInt64:
@@ -249,7 +301,7 @@ namespace ProtoCache {
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return Int64Bytes(v);
                     }
                 case FieldType.SFixed32:
                 case FieldType.SInt32:
@@ -259,7 +311,7 @@ namespace ProtoCache {
                         if (v == 0) {
                             return null;
                         }
-                        return BitConverter.GetBytes(v);
+                        return Int32Bytes(v);
                     }
                 case FieldType.Bool: {
                         var v = (bool)value;
@@ -267,7 +319,7 @@ namespace ProtoCache {
                             return null;
                         }
                         var data = new byte[4];
-                        BitConverter.TryWriteBytes(data, v);
+                        data[0] = 1;
                         return data;
                     }
             }
@@ -277,46 +329,46 @@ namespace ProtoCache {
         private static byte[]? SerializeList(FieldDescriptor field, object value) {
             switch (field.FieldType) {
                 case FieldType.Message:
-                    return SerializeObjectList([..((IEnumerable)value).Cast<IMessage>()], (IMessage value) => {
-                        return Serialize(value);
+                    return SerializeObjectList((IEnumerable)value, (object item) => {
+                        return Serialize((IMessage)item);
                     });
                 case FieldType.Bytes:
-                    return SerializeObjectList((IList<ByteString>)value, (ByteString value) => {
-                        return Serialize(value);
+                    return SerializeObjectList((IEnumerable)value, (object item) => {
+                        return Serialize((ByteString)item);
                     });
                 case FieldType.String:
-                    return SerializeObjectList((IList<string>)value, (string value) => {
-                        return Serialize(value);
+                    return SerializeObjectList((IEnumerable)value, (object item) => {
+                        return Serialize((string)item);
                     });
                 case FieldType.Double:
                     return SerializeScalarList((IList<double>)value, 2, (Span<byte> buffer, double value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteDoubleLittleEndian(buffer, value);
                     });
                 case FieldType.Float:
                     return SerializeScalarList((IList<float>)value, 1, (Span<byte> buffer, float value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteSingleLittleEndian(buffer, value);
                     });
                 case FieldType.Fixed64:
                 case FieldType.UInt64:
                     return SerializeScalarList((IList<ulong>)value, 2, (Span<byte> buffer, ulong value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteUInt64LittleEndian(buffer, value);
                     });
                 case FieldType.Fixed32:
                 case FieldType.UInt32:
                     return SerializeScalarList((IList<uint>)value, 1, (Span<byte> buffer, uint value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteUInt32LittleEndian(buffer, value);
                     });
                 case FieldType.SFixed64:
                 case FieldType.SInt64:
                 case FieldType.Int64:
                     return SerializeScalarList((IList<long>)value, 2, (Span<byte> buffer, long value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteInt64LittleEndian(buffer, value);
                     });
                 case FieldType.SFixed32:
                 case FieldType.SInt32:
                 case FieldType.Int32:
                     return SerializeScalarList((IList<int>)value, 1, (Span<byte> buffer, int value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
+                        BinaryPrimitives.WriteInt32LittleEndian(buffer, value);
                     });
                 case FieldType.Bool: {
                         var v = (IList<bool>)value;
@@ -327,14 +379,54 @@ namespace ProtoCache {
                         for (int i = 0; i < v.Count; i++) {
                             vec[i] = v[i] ? (byte)1 : (byte)0;
                         }
-                        return Serialize(vec);
+                        return Serialize(vec.AsSpan());
                     }
                 case FieldType.Enum:
-                    return SerializeScalarList([.. ((IEnumerable)value).Cast<int>()], 1, (Span<byte> buffer, int value) => {
-                        BitConverter.TryWriteBytes(buffer, value);
-                    });
+                    return SerializeEnumList((IEnumerable)value);
             }
             throw new ArgumentException(string.Format("unsupported field: {0}", field.FullName));
+        }
+
+        private static byte[]? SerializeEnumList(IEnumerable value) {
+            if (value is ICollection collection && collection.Count == 0) {
+                return null;
+            }
+            if (value is IList<int> ints) {
+                return SerializeScalarList(ints, 1, (Span<byte> buffer, int item) => {
+                    BinaryPrimitives.WriteInt32LittleEndian(buffer, item);
+                });
+            }
+            var list = new List<int>();
+            foreach (var item in value) {
+                list.Add((int)item);
+            }
+            return SerializeScalarList(list, 1, (Span<byte> buffer, int item) => {
+                BinaryPrimitives.WriteInt32LittleEndian(buffer, item);
+            });
+        }
+
+        private static byte[]? SerializeObjectList(IEnumerable list, Func<object, byte[]> serialize) {
+            if (list is ICollection collection && collection.Count == 0) {
+                return null;
+            }
+            byte[][] parts;
+            if (list is ICollection sized) {
+                parts = new byte[sized.Count][];
+                int i = 0;
+                foreach (var item in list) {
+                    parts[i++] = serialize(item!);
+                }
+            } else {
+                var tmp = new List<byte[]>();
+                foreach (var item in list) {
+                    tmp.Add(serialize(item!));
+                }
+                if (tmp.Count == 0) {
+                    return null;
+                }
+                parts = [.. tmp];
+            }
+            return SerializeObjectList(parts);
         }
 
         private struct BestArray(long size, int width) {
@@ -380,7 +472,7 @@ namespace ProtoCache {
                 throw new ArgumentException("array size overflow");
             }
             var data = new byte[4 + list.Count * width * 4];
-            BitConverter.TryWriteBytes(data, (uint)((list.Count << 2) | width));
+            BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)((list.Count << 2) | width));
             var view = new Span<byte>(data);
             int off = 4;
             foreach (var one in list) {
@@ -390,23 +482,14 @@ namespace ProtoCache {
             return data;
         }
 
-        private delegate byte[] ObjectSerializer<T>(T obj);
-
-        private static byte[]? SerializeObjectList<T>(IList<T> list, ObjectSerializer<T> serialize) {
-            if (list.Count == 0) {
-                return null;
-            }
-            var parts = new byte[list.Count][];
-            for (int i = 0; i < list.Count; i++) {
-                parts[i] = serialize(list[i]);
-            }
+        private static byte[] SerializeObjectList(byte[][] parts) {
             BestArray ret = DetectBestArray(parts);
             ret.size += 1;
             if (ret.size >= (1 << 30)) {
                 throw new ArgumentException("array size overflow");
             }
             var data = new byte[(int)ret.size * 4];
-            BitConverter.TryWriteBytes(data, (uint)((parts.Length << 2) | ret.width));
+            BinaryPrimitives.WriteUInt32LittleEndian(data, (uint)((parts.Length << 2) | ret.width));
             ret.width *= 4;
 
             int off = 4;
@@ -420,7 +503,7 @@ namespace ProtoCache {
             off = 4;
             foreach (var one in parts) {
                 if (one.Length > ret.width) {
-                    BitConverter.TryWriteBytes(data.AsSpan()[off..], (uint)(tail - off) | 3);
+                    BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan()[off..], (uint)(tail - off) | 3);
                     Array.Copy(one, 0, data, tail, one.Length);
                     tail += one.Length;
                 }
@@ -442,140 +525,57 @@ namespace ProtoCache {
             var valueField = fields[1];
 
             var keys = new byte[dict.Count][];
+            var values = new byte[dict.Count][];
             PerfectHash.IKeySource reader;
             switch (keyField.FieldType) {
                 case FieldType.String: {
-                        var raw = dict.Keys.Cast<string>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            keys[i] = Serialize(raw[i]);
-                        }
+                        FillMapEntries(dict, (DictionaryEntry entry, int i) => {
+                            keys[i] = Serialize((string)entry.Key);
+                            values[i] = SerializeMapValue(valueField, entry.Value!);
+                        });
                         reader = new StrReader(keys);
                         break;
                     }
                 case FieldType.Fixed64:
                 case FieldType.UInt64: {
-                        var raw = dict.Keys.Cast<ulong>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            keys[i] = BitConverter.GetBytes(raw[i]);
-                        }
+                        FillMapEntries(dict, (DictionaryEntry entry, int i) => {
+                            keys[i] = UInt64Bytes((ulong)entry.Key);
+                            values[i] = SerializeMapValue(valueField, entry.Value!);
+                        });
                         reader = new SimpleReader(keys);
                         break;
                     }
                 case FieldType.SFixed64:
                 case FieldType.SInt64:
                 case FieldType.Int64: {
-                        var raw = dict.Keys.Cast<long>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            keys[i] = BitConverter.GetBytes(raw[i]);
-                        }
+                        FillMapEntries(dict, (DictionaryEntry entry, int i) => {
+                            keys[i] = Int64Bytes((long)entry.Key);
+                            values[i] = SerializeMapValue(valueField, entry.Value!);
+                        });
                         reader = new SimpleReader(keys);
                         break;
                     }
                 case FieldType.Fixed32:
                 case FieldType.UInt32: {
-                        var raw = dict.Keys.Cast<uint>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            keys[i] = BitConverter.GetBytes(raw[i]);
-                        }
+                        FillMapEntries(dict, (DictionaryEntry entry, int i) => {
+                            keys[i] = UInt32Bytes((uint)entry.Key);
+                            values[i] = SerializeMapValue(valueField, entry.Value!);
+                        });
                         reader = new SimpleReader(keys);
                         break;
                     }
                 case FieldType.SFixed32:
                 case FieldType.SInt32:
                 case FieldType.Int32: {
-                        var raw = dict.Keys.Cast<int>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            keys[i] = BitConverter.GetBytes(raw[i]);
-                        }
+                        FillMapEntries(dict, (DictionaryEntry entry, int i) => {
+                            keys[i] = Int32Bytes((int)entry.Key);
+                            values[i] = SerializeMapValue(valueField, entry.Value!);
+                        });
                         reader = new SimpleReader(keys);
                         break;
                     }
                 default:
                     throw new ArgumentException(string.Format("unsupported map key type: {0}", keyField.FieldType));
-            }
-
-            var values = new byte[dict.Count][];
-            switch (valueField.FieldType) {
-                case FieldType.Message: {
-                        var raw = dict.Values.Cast<IMessage>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = Serialize(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Bytes: {
-                        var raw = dict.Values.Cast<ByteString>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = Serialize(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.String: {
-                        var raw = dict.Values.Cast<string>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = Serialize(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Double: {
-                        var raw = dict.Values.Cast<double>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Float: {
-                        var raw = dict.Values.Cast<float>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Fixed64:
-                case FieldType.UInt64: {
-                        var raw = dict.Values.Cast<ulong>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Fixed32:
-                case FieldType.UInt32: {
-                        var raw = dict.Values.Cast<uint>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.SFixed64:
-                case FieldType.SInt64:
-                case FieldType.Int64: {
-                        var raw = dict.Values.Cast<long>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.SFixed32:
-                case FieldType.SInt32:
-                case FieldType.Int32:
-                case FieldType.Enum: {
-                        var raw = dict.Values.Cast<int>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = BitConverter.GetBytes(raw[i]);
-                        }
-                        break;
-                    }
-                case FieldType.Bool: {
-                        var raw = dict.Values.Cast<bool>().ToList();
-                        for (int i = 0; i < raw.Count; i++) {
-                            values[i] = new byte[4];
-                            BitConverter.TryWriteBytes(values[i], raw[i]);
-                        }
-                        break;
-                    }
-                default:
-                    throw new ArgumentException(string.Format("unsupported map value type: {0}", valueField.FieldType));
             }
 
             var index = PerfectHash.Build(reader);
@@ -599,9 +599,9 @@ namespace ProtoCache {
             }
             var data = new byte[(int)size * 4];
             index.Data.CopyTo(data);
-            var mark = BitConverter.ToUInt32(data);
+            var mark = BinaryPrimitives.ReadUInt32LittleEndian(data);
             mark |= ((uint)k.width << 30) | ((uint)v.width << 28);
-            BitConverter.TryWriteBytes(data, mark);
+            BinaryPrimitives.WriteUInt32LittleEndian(data, mark);
 
             k.width *= 4;
             v.width *= 4;
@@ -625,13 +625,13 @@ namespace ProtoCache {
                 var key = outKeys[i];
                 var val = outValues[i];
                 if (key.Length > k.width) {
-                    BitConverter.TryWriteBytes(data.AsSpan()[off..], (uint)(tail - off) | 3);
+                    BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan()[off..], (uint)(tail - off) | 3);
                     Array.Copy(key, 0, data, tail, key.Length);
                     tail += key.Length;
                 }
                 off += k.width;
                 if (val.Length > v.width) {
-                    BitConverter.TryWriteBytes(data.AsSpan()[off..], (uint)(tail - off) | 3);
+                    BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan()[off..], (uint)(tail - off) | 3);
                     Array.Copy(val, 0, data, tail, val.Length);
                     tail += val.Length;
                 }
@@ -641,6 +641,49 @@ namespace ProtoCache {
                 throw new Exception("size mismatch");
             }
             return data;
+        }
+
+        private static void FillMapEntries(IDictionary dict, Action<DictionaryEntry, int> fill) {
+            int i = 0;
+            foreach (DictionaryEntry entry in dict) {
+                fill(entry, i++);
+            }
+        }
+
+        private static byte[] SerializeMapValue(FieldDescriptor field, object value) {
+            switch (field.FieldType) {
+                case FieldType.Message:
+                    return Serialize((IMessage)value);
+                case FieldType.Bytes:
+                    return Serialize((ByteString)value);
+                case FieldType.String:
+                    return Serialize((string)value);
+                case FieldType.Double:
+                    return Float64Bytes((double)value);
+                case FieldType.Float:
+                    return Float32Bytes((float)value);
+                case FieldType.Fixed64:
+                case FieldType.UInt64:
+                    return UInt64Bytes((ulong)value);
+                case FieldType.Fixed32:
+                case FieldType.UInt32:
+                    return UInt32Bytes((uint)value);
+                case FieldType.SFixed64:
+                case FieldType.SInt64:
+                case FieldType.Int64:
+                    return Int64Bytes((long)value);
+                case FieldType.SFixed32:
+                case FieldType.SInt32:
+                case FieldType.Int32:
+                case FieldType.Enum:
+                    return Int32Bytes((int)value);
+                case FieldType.Bool: {
+                        var data = new byte[4];
+                        data[0] = (bool)value ? (byte)1 : (byte)0;
+                        return data;
+                    }
+            }
+            throw new ArgumentException(string.Format("unsupported map value type: {0}", field.FieldType));
         }
 
         private class SimpleReader(byte[][] data) : PerfectHash.IKeySource {

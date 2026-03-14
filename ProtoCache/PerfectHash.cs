@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 using System.Collections;
+using System.Buffers.Binary;
 
 
 namespace ProtoCache {
@@ -69,13 +70,11 @@ namespace ProtoCache {
             return 32 - ((int)v & 0xff);
         }
 
-        private static int[] CalcSlots(uint seed, int section, ReadOnlySpan<byte> key) {
-            var slots = new int[3];
+        private static void CalcSlots(uint seed, int section, ReadOnlySpan<byte> key, out int slot0, out int slot1, out int slot2) {
             var h = Hash.Hash128(key, (ulong)seed & 0xffffffffL);
-            slots[0] = (int)((uint)h.low % (uint)section);
-            slots[1] = (int)((uint)(h.low >> 32) % (uint)section) + section;
-            slots[2] = (int)((uint)h.high % (uint)section) + section * 2;
-            return slots;
+            slot0 = (int)((uint)h.low % (uint)section);
+            slot1 = (int)((uint)(h.low >> 32) % (uint)section) + section;
+            slot2 = (int)((uint)h.high % (uint)section) + section * 2;
         }
 
         private static int Bit2(DataView data, int pos) {
@@ -114,12 +113,12 @@ namespace ProtoCache {
 
             var bitmap = view[8..];
             var table = view[(8 + bmsz)..];
-            BitConverter.TryWriteBytes(view, size);
+            BinaryPrimitives.WriteInt32LittleEndian(view, size);
 
             var rand = new Random();
             for (int chance = (width == 1) ? 40 : 16; chance >= 0; chance--) {
                 var seed = (uint)rand.Next();
-                BitConverter.TryWriteBytes(view[4..], seed);
+                BinaryPrimitives.WriteUInt32LittleEndian(view[4..], seed);
                 graph.Init(seed, src);
                 if (!graph.Tear(free, book)) {
                     continue;
@@ -130,20 +129,20 @@ namespace ProtoCache {
                     switch (width) {
                         case 4:
                             for (int i = 0; i < bmsz / 8; i++) {
-                                BitConverter.TryWriteBytes(table[(i*4)..], cnt);
-                                cnt += CountValidSlot(BitConverter.ToUInt64(bitmap[(i*8)..]));
+                                BinaryPrimitives.WriteInt32LittleEndian(table[(i*4)..], cnt);
+                                cnt += CountValidSlot(BinaryPrimitives.ReadUInt64LittleEndian(bitmap[(i*8)..]));
                             }
                             break;
                         case 2:
                             for (int i = 0; i < bmsz / 8; i++) {
-                                BitConverter.TryWriteBytes(table[(i*2)..], (ushort)cnt);
-                                cnt += CountValidSlot(BitConverter.ToUInt64(bitmap[(i * 8)..]));
+                                BinaryPrimitives.WriteUInt16LittleEndian(table[(i*2)..], (ushort)cnt);
+                                cnt += CountValidSlot(BinaryPrimitives.ReadUInt64LittleEndian(bitmap[(i * 8)..]));
                             }
                             break;
                         default:
                             for (int i = 0; i < bmsz / 8; i++) {
                                 table[i] = (byte)cnt;
-                                cnt += CountValidSlot(BitConverter.ToUInt64(bitmap[(i * 8)..]));
+                                cnt += CountValidSlot(BinaryPrimitives.ReadUInt64LittleEndian(bitmap[(i * 8)..]));
                             }
                             break;
                     }
@@ -171,7 +170,7 @@ namespace ProtoCache {
                 data = Build(src, 1);
             } else {
                 data = new byte[4];
-                BitConverter.TryWriteBytes(data, size);
+                BinaryPrimitives.WriteInt32LittleEndian(data, size);
                 return new PerfectHash(data, size, 0);
             }
             return new PerfectHash(data, size, CalcSectionSize(size));
@@ -181,13 +180,17 @@ namespace ProtoCache {
             if (size < 2) {
                 return 0;
             }
-            var slots = CalcSlots(data.GetUInt32(4), section, key);
+            CalcSlots(data.GetUInt32(4), section, key, out int slot0, out int slot1, out int slot2);
 
             var bitmap = data.Forward(8);
             var table = bitmap.Forward(CalcBitmapSize(section));
 
-            var m = Bit2(bitmap, slots[0]) + Bit2(bitmap, slots[1]) + Bit2(bitmap, slots[2]);
-            var slot = slots[m % 3];
+            var m = Bit2(bitmap, slot0) + Bit2(bitmap, slot1) + Bit2(bitmap, slot2);
+            var slot = (m % 3) switch {
+                0 => slot0,
+                1 => slot1,
+                _ => slot2,
+            };
 
             var a = slot >>> 5;
             var b = slot & 31;
@@ -245,10 +248,9 @@ namespace ProtoCache {
                 var total = src.Total();
                 src.Reset();
                 for (int i = 0; i < total; i++) {
-                    var slots = CalcSlots(seed, section, src.Next());
                     Vertex[] edge = edges[i];
+                    CalcSlots(seed, section, src.Next(), out edge[0].slot, out edge[1].slot, out edge[2].slot);
                     for (int j = 0; j < 3; j++) {
-                        edge[j].slot = slots[j];
                         edge[j].prev = -1;
                         edge[j].next = nodes[edge[j].slot];
                         nodes[edge[j].slot] = i;

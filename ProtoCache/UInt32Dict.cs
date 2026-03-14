@@ -2,13 +2,17 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+using System.Buffers.Binary;
+
 namespace ProtoCache {
     public abstract class UInt32Dict : DictType {
         protected void Init(DataView data, int word) => Init(data, 1, word);
-        public int Key(int idx) => KeyAt(idx).GetInt32();
+        public uint Key(int idx) => KeyAt(idx).GetUInt32();
 
         public int Find(uint key) {
-            int idx = index.Locate(BitConverter.GetBytes(key));
+            Span<byte> raw = stackalloc byte[4];
+            BinaryPrimitives.WriteUInt32LittleEndian(raw, key);
+            int idx = index.Locate(raw);
             if (idx >= index.Size || key != Key(idx)) {
                 return -1;
             }

@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 using System;
+using System.Buffers.Binary;
 
 namespace ProtoCache {
     public abstract class Int64Dict : DictType {
@@ -10,7 +11,9 @@ namespace ProtoCache {
         public long Key(int idx) => KeyAt(idx).GetInt64();
 
         public int Find(long key) {
-            int idx = index.Locate(BitConverter.GetBytes(key));
+            Span<byte> raw = stackalloc byte[8];
+            BinaryPrimitives.WriteInt64LittleEndian(raw, key);
+            int idx = index.Locate(raw);
             if (idx >= index.Size || key != Key(idx)) {
                 return -1;
             }

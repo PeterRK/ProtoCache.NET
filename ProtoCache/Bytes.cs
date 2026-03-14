@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ProtoCache {
     public struct Bytes {
+        public static ReadOnlySpan<byte> ExtractRaw(DataView data) => ExtractRaw(data.Span);
 
         public static ReadOnlySpan<byte> ExtractRaw(ReadOnlySpan<byte> data) {
             uint mark = 0;
@@ -24,8 +25,8 @@ namespace ProtoCache {
             throw new ArgumentException("illegal bytes");
         }
 
-        public static byte[] ExtractBytes(DataView data) => ExtractRaw(data.Span).ToArray();
+        public static byte[] ExtractBytes(DataView data) => ExtractRaw(data).ToArray();
 
-        public static string ExtractString(DataView data) => Encoding.UTF8.GetString(ExtractRaw(data.Span));
+        public static string ExtractString(DataView data) => Encoding.UTF8.GetString(ExtractRaw(data));
     }
 }
