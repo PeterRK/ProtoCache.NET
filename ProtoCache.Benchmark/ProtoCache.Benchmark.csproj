@@ -18,4 +18,24 @@
     <ProjectReference Include="..\ProtoCache\ProtoCache.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="..\ProtoCache.Tests\test.json" Link="test.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <Target Name="GenerateFlatBufferFixture"
+          Inputs="$(MSBuildProjectDirectory)/test.fbs;$(MSBuildProjectDirectory)/test-fb.json"
+          Outputs="$(MSBuildProjectDirectory)/test.fb">
+    <Exec Command="&quot;$(MSBuildProjectDirectory)/generate-fixtures.sh&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)" />
+  </Target>
+
+  <Target Name="CopyFlatBufferFixture"
+          AfterTargets="Build"
+          Condition="Exists('$(MSBuildProjectDirectory)/test.fb')"
+          DependsOnTargets="GenerateFlatBufferFixture">
+    <Copy SourceFiles="$(MSBuildProjectDirectory)/test.fb"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
 </Project>

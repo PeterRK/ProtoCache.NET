@@ -1,6 +1,6 @@
 # ProtoCache .NET
 
-Alternative flat binary format for [Protobuf schema](https://protobuf.dev/programming-guides/proto3/). It works like FlatBuffers, but it's usually smaller and supports map. The format is flat, so numeric fields and nested structures can be accessed without full message deserialization. In the current C# implementation, some APIs still allocate when reading strings, byte arrays, or wrapper objects. [A benchmark](ProtoCache.Benchmark) shows that Protobuf has considerable deserialization overhead and significant reflection overhead. FlatBuffers is fast but wastes space. ProtoCache takes a balance between data size and read speed, so it's useful in data caching.
+Alternative flat binary format for [Protobuf schema](https://protobuf.dev/programming-guides/proto3/). It works like FlatBuffers, but it's usually smaller and supports map. The format is flat, so numeric fields and nested structures can be accessed without full message deserialization. In the current C# implementation, some APIs still allocate when reading strings or wrapper objects. [A benchmark](ProtoCache.Benchmark) shows that Protobuf has considerable deserialization overhead and significant reflection overhead. FlatBuffers is fast but wastes space. ProtoCache takes a balance between data size and read speed, so it's useful in data caching.
 
 |  | Protobuf | ProtoCache | FlatBuffers |
 |:-------|----:|----:|----:|
@@ -24,7 +24,7 @@ raw = ProtoCache.Serialize(pb);
 
 var root = new pc.Main(raw);
 ```
-Serializing a protobuf message with `ProtoCache.Serialize` is the only way to create protocache binary at present. It is easy to access by wrapping the data with generated code. For numeric fields this is direct flat access; for strings, bytes, and some object-oriented helpers, the current C# API may still allocate.
+Serializing a protobuf message with `ProtoCache.Serialize` is the only way to create protocache binary at present. It is easy to access by wrapping the data with generated code. Numeric and bytes fields use direct zero-copy access; strings and some object-oriented helpers may still allocate. Convert a bytes field to an owned array explicitly with `root.Data.ToArray()` when needed.
 
 ## Reflection
 TODO

@@ -57,7 +57,7 @@ namespace ProtoCache {
 
         public class BytesValue : Int64Dict {
             public override void Init(DataView data) => Init(data, 0);
-            public byte[] Value(int idx) => Bytes.ExtractBytes(IUnit.Jump(ValueAt(idx)));
+            public ReadOnlySpan<byte> Value(int idx) => ValueBytesAt(idx);
         }
 
         public class StringValue : Int64Dict {

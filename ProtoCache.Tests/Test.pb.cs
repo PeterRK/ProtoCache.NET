@@ -45,13 +45,40 @@ namespace ProtoCache.Tests.pb {
             "dC5BcnJNYXASHAoGYXJyYXlzGB4gASgLMgwudGVzdC5BcnJNYXASGQoFbW9k",
             "ZXYYICADKA4yCi50ZXN0Lk1vZGUaLAoKSW5kZXhFbnRyeRILCgNrZXkYASAB",
             "KAkSDQoFdmFsdWUYAiABKAU6AjgBGjsKDE9iamVjdHNFbnRyeRILCgNrZXkY",
-            "ASABKAUSGgoFdmFsdWUYAiABKAsyCy50ZXN0LlNtYWxsOgI4ASI3CgdDeWNs",
-            "aWNBEg0KBXZhbHVlGAEgASgFEh0KBmN5Y2xpYxgCIAEoCzINLnRlc3QuQ3lj",
-            "bGljQiI3CgdDeWNsaWNCEg0KBXZhbHVlGAEgASgFEh0KBmN5Y2xpYxgCIAEo",
-            "CzINLnRlc3QuQ3ljbGljQSI0CgpEZXByZWNhdGVkEhAKBGp1bmsYASABKAVC",
-            "AhgBGhQKBVZhbGlkEgsKA3ZhbBgBIAEoBSoqCgRNb2RlEgoKBk1PREVfQRAA",
-            "EgoKBk1PREVfQhABEgoKBk1PREVfQxACQhn4AQGqAhNQcm90b0NhY2hlLlRl",
-            "c3RzLnBiYgZwcm90bzM="));
+            "ASABKAUSGgoFdmFsdWUYAiABKAsyCy50ZXN0LlNtYWxsOgI4ASLCCQoITWFw",
+            "Q2FzZXMSMwoLc3RyaW5nX2Jvb2wYASADKAsyHi50ZXN0Lk1hcENhc2VzLlN0",
+            "cmluZ0Jvb2xFbnRyeRIzCgtpbnQzMl9pbnQzMhgCIAMoCzIeLnRlc3QuTWFw",
+            "Q2FzZXMuSW50MzJJbnQzMkVudHJ5EjcKDXVpbnQzMl91aW50MzIYAyADKAsy",
+            "IC50ZXN0Lk1hcENhc2VzLlVpbnQzMlVpbnQzMkVudHJ5EjMKC2ludDY0X2lu",
+            "dDY0GAQgAygLMh4udGVzdC5NYXBDYXNlcy5JbnQ2NEludDY0RW50cnkSNwoN",
+            "dWludDY0X3VpbnQ2NBgFIAMoCzIgLnRlc3QuTWFwQ2FzZXMuVWludDY0VWlu",
+            "dDY0RW50cnkSNQoMc3RyaW5nX2Zsb2F0GAYgAygLMh8udGVzdC5NYXBDYXNl",
+            "cy5TdHJpbmdGbG9hdEVudHJ5EjcKDXN0cmluZ19kb3VibGUYByADKAsyIC50",
+            "ZXN0Lk1hcENhc2VzLlN0cmluZ0RvdWJsZUVudHJ5EjUKDHN0cmluZ19ieXRl",
+            "cxgIIAMoCzIfLnRlc3QuTWFwQ2FzZXMuU3RyaW5nQnl0ZXNFbnRyeRI3Cg1z",
+            "dHJpbmdfc3RyaW5nGAkgAygLMiAudGVzdC5NYXBDYXNlcy5TdHJpbmdTdHJp",
+            "bmdFbnRyeRI5Cg5zdHJpbmdfbWVzc2FnZRgKIAMoCzIhLnRlc3QuTWFwQ2Fz",
+            "ZXMuU3RyaW5nTWVzc2FnZUVudHJ5EjMKC3N0cmluZ19lbnVtGAsgAygLMh4u",
+            "dGVzdC5NYXBDYXNlcy5TdHJpbmdFbnVtRW50cnkaMQoPU3RyaW5nQm9vbEVu",
+            "dHJ5EgsKA2tleRgBIAEoCRINCgV2YWx1ZRgCIAEoCDoCOAEaMQoPSW50MzJJ",
+            "bnQzMkVudHJ5EgsKA2tleRgBIAEoBRINCgV2YWx1ZRgCIAEoBToCOAEaMwoR",
+            "VWludDMyVWludDMyRW50cnkSCwoDa2V5GAEgASgNEg0KBXZhbHVlGAIgASgN",
+            "OgI4ARoxCg9JbnQ2NEludDY0RW50cnkSCwoDa2V5GAEgASgDEg0KBXZhbHVl",
+            "GAIgASgDOgI4ARozChFVaW50NjRVaW50NjRFbnRyeRILCgNrZXkYASABKAQS",
+            "DQoFdmFsdWUYAiABKAQ6AjgBGjIKEFN0cmluZ0Zsb2F0RW50cnkSCwoDa2V5",
+            "GAEgASgJEg0KBXZhbHVlGAIgASgCOgI4ARozChFTdHJpbmdEb3VibGVFbnRy",
+            "eRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAE6AjgBGjIKEFN0cmluZ0J5",
+            "dGVzRW50cnkSCwoDa2V5GAEgASgJEg0KBXZhbHVlGAIgASgMOgI4ARozChFT",
+            "dHJpbmdTdHJpbmdFbnRyeRILCgNrZXkYASABKAkSDQoFdmFsdWUYAiABKAk6",
+            "AjgBGkEKElN0cmluZ01lc3NhZ2VFbnRyeRILCgNrZXkYASABKAkSGgoFdmFs",
+            "dWUYAiABKAsyCy50ZXN0LlNtYWxsOgI4ARo9Cg9TdHJpbmdFbnVtRW50cnkS",
+            "CwoDa2V5GAEgASgJEhkKBXZhbHVlGAIgASgOMgoudGVzdC5Nb2RlOgI4ASI3",
+            "CgdDeWNsaWNBEg0KBXZhbHVlGAEgASgFEh0KBmN5Y2xpYxgCIAEoCzINLnRl",
+            "c3QuQ3ljbGljQiI3CgdDeWNsaWNCEg0KBXZhbHVlGAEgASgFEh0KBmN5Y2xp",
+            "YxgCIAEoCzINLnRlc3QuQ3ljbGljQSI0CgpEZXByZWNhdGVkEhAKBGp1bmsY",
+            "ASABKAVCAhgBGhQKBVZhbGlkEgsKA3ZhbBgBIAEoBSoqCgRNb2RlEgoKBk1P",
+            "REVfQRAAEgoKBk1PREVfQhABEgoKBk1PREVfQxACQhn4AQGqAhNQcm90b0Nh",
+            "Y2hlLlRlc3RzLnBiYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::ProtoCache.Tests.pb.Mode), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -60,6 +87,7 @@ namespace ProtoCache.Tests.pb {
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.ArrMap), global::ProtoCache.Tests.pb.ArrMap.Parser, new[]{ "X" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.ArrMap.Types.Array), global::ProtoCache.Tests.pb.ArrMap.Types.Array.Parser, new[]{ "X" }, null, null, null, null),
             null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.Main), global::ProtoCache.Tests.pb.Main.Parser, new[]{ "I32", "U32", "I64", "U64", "Flag", "Mode", "Str", "Data", "F32", "F64", "Object", "I32V", "U64V", "Strv", "Datav", "F32V", "F64V", "Flags", "Objectv", "TU32", "TI32", "TS32", "TU64", "TI64", "TS64", "Index", "Objects", "Matrix", "Vector", "Arrays", "Modev" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, null, }),
+            new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.MapCases), global::ProtoCache.Tests.pb.MapCases.Parser, new[]{ "StringBool", "Int32Int32", "Uint32Uint32", "Int64Int64", "Uint64Uint64", "StringFloat", "StringDouble", "StringBytes", "StringString", "StringMessage", "StringEnum" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { null, null, null, null, null, null, null, null, null, null, null, }),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.CyclicA), global::ProtoCache.Tests.pb.CyclicA.Parser, new[]{ "Value", "Cyclic" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.CyclicB), global::ProtoCache.Tests.pb.CyclicB.Parser, new[]{ "Value", "Cyclic" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.Deprecated), global::ProtoCache.Tests.pb.Deprecated.Parser, new[]{ "Junk" }, null, null, null, new pbr::GeneratedClrTypeInfo[] { new pbr::GeneratedClrTypeInfo(typeof(global::ProtoCache.Tests.pb.Deprecated.Types.Valid), global::ProtoCache.Tests.pb.Deprecated.Types.Valid.Parser, new[]{ "Val" }, null, null, null, null)})
@@ -78,7 +106,6 @@ namespace ProtoCache.Tests.pb {
   #endregion
 
   #region Messages
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Small : pb::IMessage<Small>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -325,11 +352,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -360,11 +383,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -391,7 +410,6 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Vec2D : pb::IMessage<Vec2D>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -536,11 +554,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -559,11 +573,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -581,7 +591,6 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
-      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class Vec1D : pb::IMessage<Vec1D>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
@@ -726,11 +735,7 @@ namespace ProtoCache.Tests.pb {
         #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
                 break;
@@ -750,11 +755,7 @@ namespace ProtoCache.Tests.pb {
         void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
                 break;
@@ -775,7 +776,6 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class ArrMap : pb::IMessage<ArrMap>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -908,7 +908,7 @@ namespace ProtoCache.Tests.pb {
       if (other == null) {
         return;
       }
-      X_.MergeFrom(other.X_);
+      X_.Add(other.X_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -920,11 +920,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -943,11 +939,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -965,7 +957,6 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
-      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class Array : pb::IMessage<Array>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
@@ -1110,11 +1101,7 @@ namespace ProtoCache.Tests.pb {
         #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
                 break;
@@ -1134,11 +1121,7 @@ namespace ProtoCache.Tests.pb {
         void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
                 break;
@@ -1159,7 +1142,6 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Main : pb::IMessage<Main>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2035,8 +2017,8 @@ namespace ProtoCache.Tests.pb {
       if (other.TS64 != 0L) {
         TS64 = other.TS64;
       }
-      index_.MergeFrom(other.index_);
-      objects_.MergeFrom(other.objects_);
+      index_.Add(other.index_);
+      objects_.Add(other.objects_);
       if (other.matrix_ != null) {
         if (matrix_ == null) {
           Matrix = new global::ProtoCache.Tests.pb.Vec2D();
@@ -2062,11 +2044,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2220,11 +2198,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2374,7 +2348,444 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class MapCases : pb::IMessage<MapCases>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<MapCases> _parser = new pb::MessageParser<MapCases>(() => new MapCases());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<MapCases> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapCases() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapCases(MapCases other) : this() {
+      stringBool_ = other.stringBool_.Clone();
+      int32Int32_ = other.int32Int32_.Clone();
+      uint32Uint32_ = other.uint32Uint32_.Clone();
+      int64Int64_ = other.int64Int64_.Clone();
+      uint64Uint64_ = other.uint64Uint64_.Clone();
+      stringFloat_ = other.stringFloat_.Clone();
+      stringDouble_ = other.stringDouble_.Clone();
+      stringBytes_ = other.stringBytes_.Clone();
+      stringString_ = other.stringString_.Clone();
+      stringMessage_ = other.stringMessage_.Clone();
+      stringEnum_ = other.stringEnum_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapCases Clone() {
+      return new MapCases(this);
+    }
+
+    /// <summary>Field number for the "string_bool" field.</summary>
+    public const int StringBoolFieldNumber = 1;
+    private static readonly pbc::MapField<string, bool>.Codec _map_stringBool_codec
+        = new pbc::MapField<string, bool>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForBool(16, false), 10);
+    private readonly pbc::MapField<string, bool> stringBool_ = new pbc::MapField<string, bool>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, bool> StringBool {
+      get { return stringBool_; }
+    }
+
+    /// <summary>Field number for the "int32_int32" field.</summary>
+    public const int Int32Int32FieldNumber = 2;
+    private static readonly pbc::MapField<int, int>.Codec _map_int32Int32_codec
+        = new pbc::MapField<int, int>.Codec(pb::FieldCodec.ForInt32(8, 0), pb::FieldCodec.ForInt32(16, 0), 18);
+    private readonly pbc::MapField<int, int> int32Int32_ = new pbc::MapField<int, int>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<int, int> Int32Int32 {
+      get { return int32Int32_; }
+    }
+
+    /// <summary>Field number for the "uint32_uint32" field.</summary>
+    public const int Uint32Uint32FieldNumber = 3;
+    private static readonly pbc::MapField<uint, uint>.Codec _map_uint32Uint32_codec
+        = new pbc::MapField<uint, uint>.Codec(pb::FieldCodec.ForUInt32(8, 0), pb::FieldCodec.ForUInt32(16, 0), 26);
+    private readonly pbc::MapField<uint, uint> uint32Uint32_ = new pbc::MapField<uint, uint>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<uint, uint> Uint32Uint32 {
+      get { return uint32Uint32_; }
+    }
+
+    /// <summary>Field number for the "int64_int64" field.</summary>
+    public const int Int64Int64FieldNumber = 4;
+    private static readonly pbc::MapField<long, long>.Codec _map_int64Int64_codec
+        = new pbc::MapField<long, long>.Codec(pb::FieldCodec.ForInt64(8, 0L), pb::FieldCodec.ForInt64(16, 0L), 34);
+    private readonly pbc::MapField<long, long> int64Int64_ = new pbc::MapField<long, long>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<long, long> Int64Int64 {
+      get { return int64Int64_; }
+    }
+
+    /// <summary>Field number for the "uint64_uint64" field.</summary>
+    public const int Uint64Uint64FieldNumber = 5;
+    private static readonly pbc::MapField<ulong, ulong>.Codec _map_uint64Uint64_codec
+        = new pbc::MapField<ulong, ulong>.Codec(pb::FieldCodec.ForUInt64(8, 0UL), pb::FieldCodec.ForUInt64(16, 0UL), 42);
+    private readonly pbc::MapField<ulong, ulong> uint64Uint64_ = new pbc::MapField<ulong, ulong>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<ulong, ulong> Uint64Uint64 {
+      get { return uint64Uint64_; }
+    }
+
+    /// <summary>Field number for the "string_float" field.</summary>
+    public const int StringFloatFieldNumber = 6;
+    private static readonly pbc::MapField<string, float>.Codec _map_stringFloat_codec
+        = new pbc::MapField<string, float>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForFloat(21, 0F), 50);
+    private readonly pbc::MapField<string, float> stringFloat_ = new pbc::MapField<string, float>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, float> StringFloat {
+      get { return stringFloat_; }
+    }
+
+    /// <summary>Field number for the "string_double" field.</summary>
+    public const int StringDoubleFieldNumber = 7;
+    private static readonly pbc::MapField<string, double>.Codec _map_stringDouble_codec
+        = new pbc::MapField<string, double>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForDouble(17, 0D), 58);
+    private readonly pbc::MapField<string, double> stringDouble_ = new pbc::MapField<string, double>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, double> StringDouble {
+      get { return stringDouble_; }
+    }
+
+    /// <summary>Field number for the "string_bytes" field.</summary>
+    public const int StringBytesFieldNumber = 8;
+    private static readonly pbc::MapField<string, pb::ByteString>.Codec _map_stringBytes_codec
+        = new pbc::MapField<string, pb::ByteString>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForBytes(18, pb::ByteString.Empty), 66);
+    private readonly pbc::MapField<string, pb::ByteString> stringBytes_ = new pbc::MapField<string, pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, pb::ByteString> StringBytes {
+      get { return stringBytes_; }
+    }
+
+    /// <summary>Field number for the "string_string" field.</summary>
+    public const int StringStringFieldNumber = 9;
+    private static readonly pbc::MapField<string, string>.Codec _map_stringString_codec
+        = new pbc::MapField<string, string>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForString(18, ""), 74);
+    private readonly pbc::MapField<string, string> stringString_ = new pbc::MapField<string, string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, string> StringString {
+      get { return stringString_; }
+    }
+
+    /// <summary>Field number for the "string_message" field.</summary>
+    public const int StringMessageFieldNumber = 10;
+    private static readonly pbc::MapField<string, global::ProtoCache.Tests.pb.Small>.Codec _map_stringMessage_codec
+        = new pbc::MapField<string, global::ProtoCache.Tests.pb.Small>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForMessage(18, global::ProtoCache.Tests.pb.Small.Parser), 82);
+    private readonly pbc::MapField<string, global::ProtoCache.Tests.pb.Small> stringMessage_ = new pbc::MapField<string, global::ProtoCache.Tests.pb.Small>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, global::ProtoCache.Tests.pb.Small> StringMessage {
+      get { return stringMessage_; }
+    }
+
+    /// <summary>Field number for the "string_enum" field.</summary>
+    public const int StringEnumFieldNumber = 11;
+    private static readonly pbc::MapField<string, global::ProtoCache.Tests.pb.Mode>.Codec _map_stringEnum_codec
+        = new pbc::MapField<string, global::ProtoCache.Tests.pb.Mode>.Codec(pb::FieldCodec.ForString(10, ""), pb::FieldCodec.ForEnum(16, x => (int) x, x => (global::ProtoCache.Tests.pb.Mode) x, global::ProtoCache.Tests.pb.Mode.A), 90);
+    private readonly pbc::MapField<string, global::ProtoCache.Tests.pb.Mode> stringEnum_ = new pbc::MapField<string, global::ProtoCache.Tests.pb.Mode>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::MapField<string, global::ProtoCache.Tests.pb.Mode> StringEnum {
+      get { return stringEnum_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as MapCases);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(MapCases other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!StringBool.Equals(other.StringBool)) return false;
+      if (!Int32Int32.Equals(other.Int32Int32)) return false;
+      if (!Uint32Uint32.Equals(other.Uint32Uint32)) return false;
+      if (!Int64Int64.Equals(other.Int64Int64)) return false;
+      if (!Uint64Uint64.Equals(other.Uint64Uint64)) return false;
+      if (!StringFloat.Equals(other.StringFloat)) return false;
+      if (!StringDouble.Equals(other.StringDouble)) return false;
+      if (!StringBytes.Equals(other.StringBytes)) return false;
+      if (!StringString.Equals(other.StringString)) return false;
+      if (!StringMessage.Equals(other.StringMessage)) return false;
+      if (!StringEnum.Equals(other.StringEnum)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= StringBool.GetHashCode();
+      hash ^= Int32Int32.GetHashCode();
+      hash ^= Uint32Uint32.GetHashCode();
+      hash ^= Int64Int64.GetHashCode();
+      hash ^= Uint64Uint64.GetHashCode();
+      hash ^= StringFloat.GetHashCode();
+      hash ^= StringDouble.GetHashCode();
+      hash ^= StringBytes.GetHashCode();
+      hash ^= StringString.GetHashCode();
+      hash ^= StringMessage.GetHashCode();
+      hash ^= StringEnum.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      stringBool_.WriteTo(output, _map_stringBool_codec);
+      int32Int32_.WriteTo(output, _map_int32Int32_codec);
+      uint32Uint32_.WriteTo(output, _map_uint32Uint32_codec);
+      int64Int64_.WriteTo(output, _map_int64Int64_codec);
+      uint64Uint64_.WriteTo(output, _map_uint64Uint64_codec);
+      stringFloat_.WriteTo(output, _map_stringFloat_codec);
+      stringDouble_.WriteTo(output, _map_stringDouble_codec);
+      stringBytes_.WriteTo(output, _map_stringBytes_codec);
+      stringString_.WriteTo(output, _map_stringString_codec);
+      stringMessage_.WriteTo(output, _map_stringMessage_codec);
+      stringEnum_.WriteTo(output, _map_stringEnum_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      stringBool_.WriteTo(ref output, _map_stringBool_codec);
+      int32Int32_.WriteTo(ref output, _map_int32Int32_codec);
+      uint32Uint32_.WriteTo(ref output, _map_uint32Uint32_codec);
+      int64Int64_.WriteTo(ref output, _map_int64Int64_codec);
+      uint64Uint64_.WriteTo(ref output, _map_uint64Uint64_codec);
+      stringFloat_.WriteTo(ref output, _map_stringFloat_codec);
+      stringDouble_.WriteTo(ref output, _map_stringDouble_codec);
+      stringBytes_.WriteTo(ref output, _map_stringBytes_codec);
+      stringString_.WriteTo(ref output, _map_stringString_codec);
+      stringMessage_.WriteTo(ref output, _map_stringMessage_codec);
+      stringEnum_.WriteTo(ref output, _map_stringEnum_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      size += stringBool_.CalculateSize(_map_stringBool_codec);
+      size += int32Int32_.CalculateSize(_map_int32Int32_codec);
+      size += uint32Uint32_.CalculateSize(_map_uint32Uint32_codec);
+      size += int64Int64_.CalculateSize(_map_int64Int64_codec);
+      size += uint64Uint64_.CalculateSize(_map_uint64Uint64_codec);
+      size += stringFloat_.CalculateSize(_map_stringFloat_codec);
+      size += stringDouble_.CalculateSize(_map_stringDouble_codec);
+      size += stringBytes_.CalculateSize(_map_stringBytes_codec);
+      size += stringString_.CalculateSize(_map_stringString_codec);
+      size += stringMessage_.CalculateSize(_map_stringMessage_codec);
+      size += stringEnum_.CalculateSize(_map_stringEnum_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(MapCases other) {
+      if (other == null) {
+        return;
+      }
+      stringBool_.Add(other.stringBool_);
+      int32Int32_.Add(other.int32Int32_);
+      uint32Uint32_.Add(other.uint32Uint32_);
+      int64Int64_.Add(other.int64Int64_);
+      uint64Uint64_.Add(other.uint64Uint64_);
+      stringFloat_.Add(other.stringFloat_);
+      stringDouble_.Add(other.stringDouble_);
+      stringBytes_.Add(other.stringBytes_);
+      stringString_.Add(other.stringString_);
+      stringMessage_.Add(other.stringMessage_);
+      stringEnum_.Add(other.stringEnum_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            stringBool_.AddEntriesFrom(input, _map_stringBool_codec);
+            break;
+          }
+          case 18: {
+            int32Int32_.AddEntriesFrom(input, _map_int32Int32_codec);
+            break;
+          }
+          case 26: {
+            uint32Uint32_.AddEntriesFrom(input, _map_uint32Uint32_codec);
+            break;
+          }
+          case 34: {
+            int64Int64_.AddEntriesFrom(input, _map_int64Int64_codec);
+            break;
+          }
+          case 42: {
+            uint64Uint64_.AddEntriesFrom(input, _map_uint64Uint64_codec);
+            break;
+          }
+          case 50: {
+            stringFloat_.AddEntriesFrom(input, _map_stringFloat_codec);
+            break;
+          }
+          case 58: {
+            stringDouble_.AddEntriesFrom(input, _map_stringDouble_codec);
+            break;
+          }
+          case 66: {
+            stringBytes_.AddEntriesFrom(input, _map_stringBytes_codec);
+            break;
+          }
+          case 74: {
+            stringString_.AddEntriesFrom(input, _map_stringString_codec);
+            break;
+          }
+          case 82: {
+            stringMessage_.AddEntriesFrom(input, _map_stringMessage_codec);
+            break;
+          }
+          case 90: {
+            stringEnum_.AddEntriesFrom(input, _map_stringEnum_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            stringBool_.AddEntriesFrom(ref input, _map_stringBool_codec);
+            break;
+          }
+          case 18: {
+            int32Int32_.AddEntriesFrom(ref input, _map_int32Int32_codec);
+            break;
+          }
+          case 26: {
+            uint32Uint32_.AddEntriesFrom(ref input, _map_uint32Uint32_codec);
+            break;
+          }
+          case 34: {
+            int64Int64_.AddEntriesFrom(ref input, _map_int64Int64_codec);
+            break;
+          }
+          case 42: {
+            uint64Uint64_.AddEntriesFrom(ref input, _map_uint64Uint64_codec);
+            break;
+          }
+          case 50: {
+            stringFloat_.AddEntriesFrom(ref input, _map_stringFloat_codec);
+            break;
+          }
+          case 58: {
+            stringDouble_.AddEntriesFrom(ref input, _map_stringDouble_codec);
+            break;
+          }
+          case 66: {
+            stringBytes_.AddEntriesFrom(ref input, _map_stringBytes_codec);
+            break;
+          }
+          case 74: {
+            stringString_.AddEntriesFrom(ref input, _map_stringString_codec);
+            break;
+          }
+          case 82: {
+            stringMessage_.AddEntriesFrom(ref input, _map_stringMessage_codec);
+            break;
+          }
+          case 90: {
+            stringEnum_.AddEntriesFrom(ref input, _map_stringEnum_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
   public sealed partial class CyclicA : pb::IMessage<CyclicA>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2389,7 +2800,7 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[4]; }
+      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2562,11 +2973,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2592,11 +2999,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2618,7 +3021,6 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class CyclicB : pb::IMessage<CyclicB>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2633,7 +3035,7 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[5]; }
+      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2806,11 +3208,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -2836,11 +3234,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -2862,7 +3256,6 @@ namespace ProtoCache.Tests.pb {
 
   }
 
-  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class Deprecated : pb::IMessage<Deprecated>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -2877,7 +3270,7 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[6]; }
+      get { return global::ProtoCache.Tests.pb.TestReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3019,11 +3412,7 @@ namespace ProtoCache.Tests.pb {
     #else
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
             break;
@@ -3042,11 +3431,7 @@ namespace ProtoCache.Tests.pb {
     void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
       uint tag;
       while ((tag = input.ReadTag()) != 0) {
-      if ((tag & 7) == 4) {
-        // Abort on any end group tag.
-        return;
-      }
-      switch(tag) {
+        switch(tag) {
           default:
             _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
             break;
@@ -3064,7 +3449,6 @@ namespace ProtoCache.Tests.pb {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static partial class Types {
-      [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
       public sealed partial class Valid : pb::IMessage<Valid>
       #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
           , pb::IBufferMessage
@@ -3220,11 +3604,7 @@ namespace ProtoCache.Tests.pb {
         #else
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
                 break;
@@ -3243,11 +3623,7 @@ namespace ProtoCache.Tests.pb {
         void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
           uint tag;
           while ((tag = input.ReadTag()) != 0) {
-          if ((tag & 7) == 4) {
-            // Abort on any end group tag.
-            return;
-          }
-          switch(tag) {
+            switch(tag) {
               default:
                 _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
                 break;

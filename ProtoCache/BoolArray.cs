@@ -5,18 +5,18 @@
 namespace ProtoCache {
     public class BoolArray : IUnit {
 
-        private byte[] body = [];
+        private ReadOnlyMemory<byte> body = ReadOnlyMemory<byte>.Empty;
 
         public int Size => body.Length;
 
-        public bool Get(int idx) => body[idx] != 0;
+        public bool Get(int idx) => body.Span[idx] != 0;
 
         public void Init(DataView data) {
             if (!data.IsValid) {
-                body = [];
+                body = ReadOnlyMemory<byte>.Empty;
                 return;
             }
-            body = Bytes.ExtractBytes(data);
+            body = Bytes.ExtractRawMemory(data);
         }
     }
 }

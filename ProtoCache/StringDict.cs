@@ -19,8 +19,9 @@ namespace ProtoCache {
                 : (rented = ArrayPool<byte>.Shared.Rent(byteCount));
             try {
                 Encoding.UTF8.GetBytes(key.AsSpan(), buffer);
-                int idx = index.Locate(buffer[..byteCount]);
-                if (idx >= index.Size || !buffer[..byteCount].SequenceEqual(KeyRaw(idx))) {
+                var utf8 = buffer[..byteCount];
+                int idx = index.Locate(utf8);
+                if (idx >= index.Size || !utf8.SequenceEqual(KeyRaw(idx))) {
                     return -1;
                 }
                 return idx;
@@ -68,7 +69,7 @@ namespace ProtoCache {
 
         public class BytesValue : StringDict {
             public override void Init(DataView data) => Init(data, 0);
-            public byte[] Value(int idx) => Bytes.ExtractBytes(IUnit.Jump(ValueAt(idx)));
+            public ReadOnlySpan<byte> Value(int idx) => ValueBytesAt(idx);
         }
 
         public class StringValue : StringDict {

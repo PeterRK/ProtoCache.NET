@@ -25,7 +25,8 @@ namespace ProtoCache.Tests {
             Assert.That(root.Flag, Is.True);
             Assert.That(root.Mode, Is.EqualTo(pc.Mode.MODE_C));
             Assert.That(root.Str, Is.EqualTo("Hello World!"));
-            Assert.That(root.Data, Is.EqualTo(Encoding.ASCII.GetBytes("abc123!?$*&()'-=@~")));
+            var expectedData = Encoding.ASCII.GetBytes("abc123!?$*&()'-=@~");
+            Assert.That(root.Data.SequenceEqual(expectedData), Is.True);
             Assert.That(root.F32, Is.EqualTo(-2.1f));
             Assert.That(root.F64, Is.EqualTo(1.0));
 

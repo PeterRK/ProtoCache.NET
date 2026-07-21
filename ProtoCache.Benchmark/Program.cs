@@ -3,6 +3,7 @@
 // license that can be found in the LICENSE file.
 
 using System.Diagnostics;
+using Google.Protobuf;
 using pb = global::ProtoCache.Tests.pb;
 using pc = global::ProtoCache.Tests.pc;
 using fb = global::ProtoCache.Tests.fb;
@@ -14,7 +15,18 @@ namespace ProtoCache.Benchmark {
         public static void Main(string[] args) {
             var timer = new Stopwatch();
 
-            var raw = File.ReadAllBytes("test.pc");
+            var fixture = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "test.json"));
+            var message = JsonParser.Default.Parse<pb.Main>(fixture);
+            var pcRaw = ProtoCache.Serialize(message);
+            var pbRaw = message.ToByteArray();
+            var fbPath = Path.Combine(AppContext.BaseDirectory, "test.fb");
+            if (!File.Exists(fbPath)) {
+                throw new FileNotFoundException(
+                    "Run ProtoCache.Benchmark/generate-fixtures.sh before the benchmark.", fbPath);
+            }
+            var fbRaw = File.ReadAllBytes(fbPath);
+
+            var raw = pcRaw;
             for (int i = 0; i < loop; i++) {
                 Utils.Decompress(Utils.Compress(raw));
             }
@@ -45,7 +57,7 @@ namespace ProtoCache.Benchmark {
             junk.Print();
             Console.Write("protocache: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
 
-            raw = File.ReadAllBytes("test.pb");
+            raw = pbRaw;
             junk = new Junk();
             for (int i = 0; i < loop; i++) {
                 junk.Traverse(pb.Main.Parser.ParseFrom(raw));
@@ -58,7 +70,7 @@ namespace ProtoCache.Benchmark {
             junk.Print();
             Console.Write("protobuf: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
 
-            raw = File.ReadAllBytes("test.fb");
+            raw = fbRaw;
             junk = new Junk();
             for (int i = 0; i < loop; i++) {
                 var root = fb.Main.GetRootAsMain(new Google.FlatBuffers.ByteBuffer(raw));
@@ -103,6 +115,9 @@ namespace ProtoCache.Benchmark {
                 if (v == null) {
                     return;
                 }
+                i32 += v.Length;
+            }
+            private void Consume(ReadOnlySpan<byte> v) {
                 i32 += v.Length;
             }
 

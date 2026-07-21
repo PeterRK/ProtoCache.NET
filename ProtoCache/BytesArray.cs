@@ -5,6 +5,6 @@
 namespace ProtoCache {
     public class BytesArray : ArrayType {
         public override void Init(DataView data) => Init(data, 0);
-        public byte[] Get(int idx) => Bytes.ExtractBytes(IUnit.Jump(At(idx)));
+        public ReadOnlySpan<byte> Get(int idx) => BytesAt(idx);
     }
 }

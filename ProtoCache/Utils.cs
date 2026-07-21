@@ -88,7 +88,7 @@ namespace ProtoCache {
             public bool Unpack(int mark) {
                 if ((mark & 8) != 0) {
                     int cnt = (mark & 3) + 1;
-                    if (off + cnt > output.Length) {
+                    if (cnt > output.Length - off) {
                         return false;
                     }
                     byte v = 0;
@@ -100,7 +100,8 @@ namespace ProtoCache {
                     }
                 } else {
                     int l = mark & 7;
-                    if (k + l > src.Length) {
+                    if (l > src.Length - k
+                        || l > output.Length - off) {
                         return false;
                     }
                     for (; l != 0; l--) {
@@ -130,12 +131,22 @@ namespace ProtoCache {
                 return [];
             }
             int k = 0;
-            int size = 0;
+            uint size = 0;
             for (int sft = 0; sft < 32; sft += 7) {
+                if (k >= src.Length) {
+                    throw new ArgumentException("broken data");
+                }
                 byte b = src[k++];
-                size |= ((int)b & 0x7f) << sft;
+                size |= ((uint)b & 0x7f) << sft;
                 if ((b & 0x80) == 0) {
-                    return Decompress(src, k, size);
+                    if (sft == 28 && b > 7) {
+                        throw new ArgumentException("broken data");
+                    }
+                    long maxSize = (src.Length - k) * 8L;
+                    if (size > int.MaxValue || size > maxSize) {
+                        throw new ArgumentException("broken data");
+                    }
+                    return Decompress(src, k, (int)size);
                 }
             }
             throw new ArgumentException("broken data");

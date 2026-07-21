@@ -81,7 +81,6 @@ public class Main : global::ProtoCache.IUnit {
 	public void Init(global::ProtoCache.DataView data) {
 		_core_.Init(data);
 		str_ = null;
-		data_ = null;
 		object_ = null;
 		i32v_ = null;
 		u64v_ = null;
@@ -110,11 +109,7 @@ public class Main : global::ProtoCache.IUnit {
 		str_ ??= _core_.GetString(_str);
 		return str_;
 	}}
-	private byte[]? data_ = null;
-	public byte[] Data { get {
-		data_ ??= _core_.GetBytes(_data);
-		return data_;
-	}}
+	public global::System.ReadOnlySpan<byte> Data => _core_.GetBytes(_data);
 	public float F32 => _core_.GetFloat32(_f32);
 	public double F64 => _core_.GetFloat64(_f64);
 	private global::ProtoCache.Tests.pc.Small? object_ = null;
@@ -197,6 +192,95 @@ public class Main : global::ProtoCache.IUnit {
 	public global::ProtoCache.Int32Array Modev { get {
 		modev_ ??= _core_.GetObject<global::ProtoCache.Int32Array>(_modev);
 		return modev_;
+	}}
+}
+
+public class MapCases : global::ProtoCache.IUnit {
+	public const ushort _string_bool = 0;
+	public const ushort _int32_int32 = 1;
+	public const ushort _uint32_uint32 = 2;
+	public const ushort _int64_int64 = 3;
+	public const ushort _uint64_uint64 = 4;
+	public const ushort _string_float = 5;
+	public const ushort _string_double = 6;
+	public const ushort _string_bytes = 7;
+	public const ushort _string_string = 8;
+	public const ushort _string_message = 9;
+	public const ushort _string_enum = 10;
+
+	private global::ProtoCache.Message _core_;
+	public MapCases() {}
+	public MapCases(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(ushort id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
+		_core_.Init(data);
+		string_bool_ = null;
+		int32_int32_ = null;
+		uint32_uint32_ = null;
+		int64_int64_ = null;
+		uint64_uint64_ = null;
+		string_float_ = null;
+		string_double_ = null;
+		string_bytes_ = null;
+		string_string_ = null;
+		string_message_ = null;
+		string_enum_ = null;
+	}
+
+	private global::ProtoCache.StringDict.BoolValue? string_bool_ = null;
+	public global::ProtoCache.StringDict.BoolValue StringBool { get {
+		string_bool_ ??= _core_.GetObject<global::ProtoCache.StringDict.BoolValue>(_string_bool);
+		return string_bool_;
+	}}
+	private global::ProtoCache.Int32Dict.Int32Value? int32_int32_ = null;
+	public global::ProtoCache.Int32Dict.Int32Value Int32Int32 { get {
+		int32_int32_ ??= _core_.GetObject<global::ProtoCache.Int32Dict.Int32Value>(_int32_int32);
+		return int32_int32_;
+	}}
+	private global::ProtoCache.UInt32Dict.UInt32Value? uint32_uint32_ = null;
+	public global::ProtoCache.UInt32Dict.UInt32Value Uint32Uint32 { get {
+		uint32_uint32_ ??= _core_.GetObject<global::ProtoCache.UInt32Dict.UInt32Value>(_uint32_uint32);
+		return uint32_uint32_;
+	}}
+	private global::ProtoCache.Int64Dict.Int64Value? int64_int64_ = null;
+	public global::ProtoCache.Int64Dict.Int64Value Int64Int64 { get {
+		int64_int64_ ??= _core_.GetObject<global::ProtoCache.Int64Dict.Int64Value>(_int64_int64);
+		return int64_int64_;
+	}}
+	private global::ProtoCache.UInt64Dict.UInt64Value? uint64_uint64_ = null;
+	public global::ProtoCache.UInt64Dict.UInt64Value Uint64Uint64 { get {
+		uint64_uint64_ ??= _core_.GetObject<global::ProtoCache.UInt64Dict.UInt64Value>(_uint64_uint64);
+		return uint64_uint64_;
+	}}
+	private global::ProtoCache.StringDict.Float32Value? string_float_ = null;
+	public global::ProtoCache.StringDict.Float32Value StringFloat { get {
+		string_float_ ??= _core_.GetObject<global::ProtoCache.StringDict.Float32Value>(_string_float);
+		return string_float_;
+	}}
+	private global::ProtoCache.StringDict.Float64Value? string_double_ = null;
+	public global::ProtoCache.StringDict.Float64Value StringDouble { get {
+		string_double_ ??= _core_.GetObject<global::ProtoCache.StringDict.Float64Value>(_string_double);
+		return string_double_;
+	}}
+	private global::ProtoCache.StringDict.BytesValue? string_bytes_ = null;
+	public global::ProtoCache.StringDict.BytesValue StringBytes { get {
+		string_bytes_ ??= _core_.GetObject<global::ProtoCache.StringDict.BytesValue>(_string_bytes);
+		return string_bytes_;
+	}}
+	private global::ProtoCache.StringDict.StringValue? string_string_ = null;
+	public global::ProtoCache.StringDict.StringValue StringString { get {
+		string_string_ ??= _core_.GetObject<global::ProtoCache.StringDict.StringValue>(_string_string);
+		return string_string_;
+	}}
+	private global::ProtoCache.StringDict.ObjectValue<global::ProtoCache.Tests.pc.Small>? string_message_ = null;
+	public global::ProtoCache.StringDict.ObjectValue<global::ProtoCache.Tests.pc.Small> StringMessage { get {
+		string_message_ ??= _core_.GetObject<global::ProtoCache.StringDict.ObjectValue<global::ProtoCache.Tests.pc.Small>>(_string_message);
+		return string_message_;
+	}}
+	private global::ProtoCache.StringDict.Int32Value? string_enum_ = null;
+	public global::ProtoCache.StringDict.Int32Value StringEnum { get {
+		string_enum_ ??= _core_.GetObject<global::ProtoCache.StringDict.Int32Value>(_string_enum);
+		return string_enum_;
 	}}
 }
 

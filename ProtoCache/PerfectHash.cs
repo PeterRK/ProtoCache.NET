@@ -61,13 +61,8 @@ namespace ProtoCache {
         }
 
         private static int CountValidSlot(ulong v) {
-            v &= (v >> 1);
-            v = (v & 0x1111111111111111UL) + ((v >> 2) & 0x1111111111111111UL);
-            v += (v >> 4);
-            v += (v >> 8);
-            v = (v & 0xf0f0f0f0f0f0f0fUL) + ((v >> 16) & 0xf0f0f0f0f0f0f0fUL);
-            v += (v >> 32);
-            return 32 - ((int)v & 0xff);
+            v = (v & 0x5555555555555555UL) & (v >> 1);
+            return 32 - System.Numerics.BitOperations.PopCount(v);
         }
 
         private static void CalcSlots(uint seed, int section, ReadOnlySpan<byte> key, out int slot0, out int slot1, out int slot2) {

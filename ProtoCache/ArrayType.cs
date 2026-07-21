@@ -13,6 +13,9 @@ namespace ProtoCache {
 
         protected DataView At(int idx) => body.Forward(idx*width);
 
+        protected ReadOnlySpan<byte> BytesAt(int idx)
+            => Bytes.ExtractRaw(IUnit.Jump(At(idx)));
+
         protected void Init(DataView data, int word) {
             if (!data.IsValid) {
                 size = 0;

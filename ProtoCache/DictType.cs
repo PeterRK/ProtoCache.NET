@@ -17,6 +17,9 @@ namespace ProtoCache {
 
         protected DataView ValueAt(int idx) => body.Forward(idx * (keyWidth + valueWidth) + keyWidth);
 
+        protected ReadOnlySpan<byte> ValueBytesAt(int idx)
+            => Bytes.ExtractRaw(IUnit.Jump(ValueAt(idx)));
+
         protected void Init(DataView data, int keyWord, int valueWord) {
             if (!data.IsValid) {
                 body = DataView.Empty;

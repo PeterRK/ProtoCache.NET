@@ -68,6 +68,20 @@ message Main {
     repeated Mode modev = 32;
 }
 
+message MapCases {
+    map<string,bool> string_bool = 1;
+    map<int32,int32> int32_int32 = 2;
+    map<uint32,uint32> uint32_uint32 = 3;
+    map<int64,int64> int64_int64 = 4;
+    map<uint64,uint64> uint64_uint64 = 5;
+    map<string,float> string_float = 6;
+    map<string,double> string_double = 7;
+    map<string,bytes> string_bytes = 8;
+    map<string,string> string_string = 9;
+    map<string,Small> string_message = 10;
+    map<string,Mode> string_enum = 11;
+}
+
 message CyclicA {
     int32 value = 1;
     CyclicB cyclic = 2;

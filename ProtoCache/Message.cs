@@ -39,20 +39,13 @@ namespace ProtoCache {
         }
 
         public static int Count32(uint v) {
-            v = (v & 0x33333333) + ((v >> 2) & 0x33333333);
-            v += (v >> 4);
-            v = (v & 0xf0f0f0f) + ((v >> 8) & 0xf0f0f0f);
-            v += (v >> 16);
-            return (int)v & 0xff;
+            return System.Numerics.BitOperations.PopCount(v & 0xaaaaaaaaU)
+                + System.Numerics.BitOperations.PopCount(v);
         }
 
         public static int Count64(ulong v) {
-            v = (v & 0x3333333333333333L) + ((v >> 2) & 0x3333333333333333L);
-            v += (v >> 4);
-            v = (v & 0xf0f0f0f0f0f0f0fL) + ((v >> 8) & 0xf0f0f0f0f0f0f0fL);
-            v += (v >> 16);
-            v += (v >> 32);
-            return (int)v & 0xff;
+            return System.Numerics.BitOperations.PopCount(v & 0xaaaaaaaaaaaaaaaaUL)
+                + System.Numerics.BitOperations.PopCount(v);
         }
 
         private readonly DataView GetField(ushort id) {
@@ -141,12 +134,12 @@ namespace ProtoCache {
             return field.GetFloat64();
         }
 
-        public readonly byte[] GetBytes(ushort id) {
+        public readonly ReadOnlySpan<byte> GetBytes(ushort id) {
             var field = GetField(id);
             if (!field.IsValid) {
-                return [];
+                return ReadOnlySpan<byte>.Empty;
             }
-            return Bytes.ExtractBytes(IUnit.Jump(field));
+            return Bytes.ExtractRaw(IUnit.Jump(field));
         }
 
         public readonly string GetString(ushort id) {
