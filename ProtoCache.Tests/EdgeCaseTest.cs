@@ -37,6 +37,31 @@ namespace ProtoCache.Tests {
             });
         }
 
+        #pragma warning disable CS0612
+        [Test]
+        public void DeprecatedFieldsAreExcludedTest() {
+            var raw = ProtoCache.Serialize(new pb.Small {
+                I32 = 7,
+                Junk = 123
+            });
+            var view = new Message();
+            view.Init(new DataView(raw));
+            var root = new pc.Small(raw);
+
+            Assert.Multiple(() => {
+                Assert.That(root.I32, Is.EqualTo(7));
+                Assert.That(view.HasField(4), Is.False);
+            });
+
+            raw = ProtoCache.Serialize(new pb.Deprecated { Junk = 123 });
+            view.Init(new DataView(raw));
+            Assert.Multiple(() => {
+                Assert.That(raw, Has.Length.EqualTo(4));
+                Assert.That(view.HasField(0), Is.False);
+            });
+        }
+        #pragma warning restore CS0612
+
         [Test]
         public void CompressionRoundTripPatternsTest() {
             byte[][] samples = [

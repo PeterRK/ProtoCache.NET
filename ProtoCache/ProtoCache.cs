@@ -61,6 +61,9 @@ namespace ProtoCache {
             }
             var fields = new FieldDescriptor[maxId];
             foreach (var field in originFields) {
+                if (field.GetOptions()?.Deprecated == true) {
+                    continue;
+                }
                 fields[field.FieldNumber - 1] = field;
             }
 
@@ -80,7 +83,8 @@ namespace ProtoCache {
                 }
             }
 
-            if (fields.Length == 1 && (fields[0].Name.Equals("_") || fields[0].Name.Equals("_x_"))) {
+            if (fields.Length == 1 && fields[0] != null
+                && (fields[0].Name.Equals("_") || fields[0].Name.Equals("_x_"))) {
                 // trim message wrapper
                 var unit = parts[0];
                 if (unit == null) {

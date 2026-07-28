@@ -1,57 +1,89 @@
 # ProtoCache .NET
 
-Alternative flat binary format for [Protobuf schema](https://protobuf.dev/programming-guides/proto3/). It works like FlatBuffers, but it's usually smaller and supports map. The format is flat, so numeric fields and nested structures can be accessed without full message deserialization. In the current C# implementation, some APIs still allocate when reading strings or wrapper objects. [A benchmark](https://github.com/peterrk/ProtoCache.NET/tree/main/ProtoCache.Benchmark) shows that Protobuf has considerable deserialization overhead and significant reflection overhead. FlatBuffers is fast but wastes space. ProtoCache takes a balance between data size and read speed, so it's useful in data caching.
+ProtoCache is a flat binary cache format generated from
+[Proto3 schemas](https://protobuf.dev/programming-guides/proto3/). It supports
+direct field access without first materializing a complete object graph and
+includes compact map support. The portable schema contract is defined by the
+[ProtoCache schema specification](https://github.com/peterrk/protocache/blob/014dcd4e81c2a60121b8eefb2eb42c7eaceace90/schema.md).
 
 |  | Protobuf | ProtoCache | FlatBuffers |
 |:-------|----:|----:|----:|
 | Data Size | 574B | 780B | 1296B |
 | Decode + Traverse | 2805ns | 1139ns | 2353ns |
 
-The C# version is not fully zero-copy yet, so benchmark results should be interpreted as "low-deserialization-overhead access" rather than literal zero-allocation traversal.
-
-See details in the [C++ version](https://github.com/peterrk/protocache).
+The benchmark is available in
+[`ProtoCache.Benchmark`](https://github.com/peterrk/ProtoCache.NET/tree/main/ProtoCache.Benchmark).
+Numeric and bytes access is zero-copy. Reading strings and constructing some
+object-oriented wrappers may allocate, so the benchmark represents
+low-deserialization-overhead access rather than universally zero-allocation
+traversal.
 
 ## Requirements
 
 - .NET 10 or later.
-- `protoc` and the `protoc-gen-pc.net` plugin when generating typed accessors.
+- `protoc` for Protobuf code generation.
+- `protoc-gen-pc.net` from ProtoCache C++ v1.2.1 for typed ProtoCache accessors.
 
 ## Installation
 
-The first public releases are prerelease packages:
-
 ```sh
-dotnet add package ProtoCache --prerelease
+dotnet add package ProtoCache --version 0.1.0
 ```
 
 ## Code generation
 
-A protobuf compiler plugin called `protoc-gen-pc.net` is available in the
-[ProtoCache C++ repository](https://github.com/peterrk/protocache/blob/main/tools/protoc-gen-pc.net.cc).
-Build or install the plugin where `protoc` can find it, then generate the C#
-accessors:
+ProtoCache 0.1.0 is paired with `protoc-gen-pc.net` from
+[ProtoCache C++ v1.2.1](https://github.com/peterrk/protocache/releases/tag/v1.2.1).
+Follow the C++ repository [build and install instructions](https://github.com/peterrk/protocache/blob/v1.2.1/README.md#build-and-install),
+then invoke the plugin through `protoc`:
 
 ```sh
-protoc --pc.net_out=. test.proto
+protoc --pc.net_out=generated schema.proto
 ```
 
-The generated files are intentionally short and readable. Keep the runtime
-package and generator compatible when upgrading.
+The schema must specify `option csharp_namespace`. Protobuf classes and
+ProtoCache accessors must use different C# namespaces because both generators
+emit the schema message names. Generate the accessors from a temporary schema
+copy that changes only `csharp_namespace`.
 
 ## Basic API
 
 ```csharp
-var pb = pb.Main.Parser.ParseFrom(raw);
-raw = ProtoCache.Serialize(pb);
+using Pb = Example.Protobuf;
+using Pc = Example.ProtoCache;
 
-var root = new pc.Main(raw);
+Pb.Main message = Pb.Main.Parser.ParseFrom(protobufBytes);
+byte[] cache = global::ProtoCache.ProtoCache.Serialize(message);
+
+var root = new Pc.Main(cache);
+int count = root.Count;
+ReadOnlySpan<byte> data = root.Data;
+byte[] ownedData = root.Data.ToArray();
 ```
 
-Serializing a protobuf message with `ProtoCache.Serialize` is the only way to create protocache binary at present. It is easy to access by wrapping the data with generated code. Numeric and bytes fields use direct zero-copy access; strings and some object-oriented helpers may still allocate. Convert a bytes field to an owned array explicitly with `root.Data.ToArray()` when needed.
+`ProtoCache.Serialize(Google.Protobuf.IMessage)` is the supported write path.
+Reading uses generated, strongly typed accessors. Numeric fields and bytes are
+read directly from the source buffer; call `.ToArray()` when an independently
+owned bytes value is required.
+
+## Compatibility
+
+Portable schema rules are defined by the C++ repository
+[`schema.md`](https://github.com/peterrk/protocache/blob/014dcd4e81c2a60121b8eefb2eb42c7eaceace90/schema.md).
+The binary layout is defined by
+[`data-format.md`](https://github.com/peterrk/protocache/blob/014dcd4e81c2a60121b8eefb2eb42c7eaceace90/data-format.md).
+
+The .NET binding targets .NET 10 and provides the binding-specific `_x_` alias
+spelling described by the schema document. It does not guarantee Protobuf field
+presence, oneof active-case semantics, or deterministic map serialization.
+Generated accessors and producers in other languages must use compatible
+schemas.
 
 ## Reflection
 
-TODO
+The writer uses the descriptor exposed by `Google.Protobuf.IMessage` internally.
+The .NET runtime does not provide schema-reflection or dynamic-message reading
+APIs; reading requires generated, strongly typed accessors.
 
 ## License
 

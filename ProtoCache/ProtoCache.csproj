@@ -9,7 +9,6 @@
     <IsPackable>true</IsPackable>
     <PackageId>ProtoCache</PackageId>
     <VersionPrefix>0.1.0</VersionPrefix>
-    <VersionSuffix>preview.1</VersionSuffix>
     <Title>ProtoCache for .NET</Title>
     <Authors>Ruan Kunliang</Authors>
     <Description>ProtoCache runtime for .NET, providing a compact flat binary cache format generated from Protocol Buffers schemas with direct access to numeric and bytes fields.</Description>
