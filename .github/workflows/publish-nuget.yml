@@ -1,0 +1,134 @@
+name: Publish NuGet
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Package version, for example 0.1.0-preview.1
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nuget-release
+  cancel-in-progress: false
+
+jobs:
+  build-package:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PACKAGE_VERSION: ${{ inputs.version }}
+
+    steps:
+      - name: Require release branch
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/release" ]]; then
+            echo "NuGet publishing must run from the release branch." >&2
+            exit 1
+          fi
+
+          if [[ ! "$PACKAGE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z][0-9A-Za-z.-]*)?$ ]]; then
+            echo "Package version must be a valid SemVer version without build metadata." >&2
+            exit 1
+          fi
+
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore ProtoCache.NET.sln
+
+      - name: Build
+        run: >-
+          dotnet build ProtoCache.NET.sln
+          --configuration Release
+          --no-restore
+          -p:ContinuousIntegrationBuild=true
+
+      - name: Test
+        run: >-
+          dotnet test ProtoCache.Tests/ProtoCache.Tests.csproj
+          --configuration Release
+          --no-build
+          --no-restore
+
+      - name: Pack
+        run: >-
+          dotnet pack ProtoCache/ProtoCache.csproj
+          --configuration Release
+          --no-build
+          --no-restore
+          --output artifacts/packages
+          -p:ContinuousIntegrationBuild=true
+          -p:PackageVersion="$PACKAGE_VERSION"
+
+      - name: Verify package artifacts
+        shell: bash
+        run: |
+          test -f "artifacts/packages/ProtoCache.$PACKAGE_VERSION.nupkg"
+          test -f "artifacts/packages/ProtoCache.$PACKAGE_VERSION.snupkg"
+
+      - name: Test package restore in a clean project
+        shell: bash
+        run: |
+          smoke_dir="$RUNNER_TEMP/protocache-package-smoke"
+          dotnet new console --framework net10.0 --output "$smoke_dir"
+          dotnet add "$smoke_dir" package ProtoCache --version "$PACKAGE_VERSION" --no-restore
+          dotnet restore "$smoke_dir" \
+            --source "$GITHUB_WORKSPACE/artifacts/packages" \
+            --source https://api.nuget.org/v3/index.json
+          dotnet build "$smoke_dir" --configuration Release --no-restore
+
+      - name: Upload package artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: ProtoCache-${{ inputs.version }}
+          path: artifacts/packages/*
+          if-no-files-found: error
+
+  publish:
+    needs: build-package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Download package artifacts
+        uses: actions/download-artifact@v7
+        with:
+          name: ProtoCache-${{ inputs.version }}
+          path: artifacts/packages
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: peterrk
+
+      - name: Publish to NuGet.org
+        shell: bash
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+          PACKAGE_VERSION: ${{ inputs.version }}
+        run: >-
+          dotnet nuget push
+          "artifacts/packages/ProtoCache.$PACKAGE_VERSION.nupkg"
+          --api-key "$NUGET_API_KEY"
+          --source https://api.nuget.org/v3/index.json
