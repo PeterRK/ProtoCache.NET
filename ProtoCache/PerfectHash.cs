@@ -111,7 +111,7 @@ namespace ProtoCache {
             BinaryPrimitives.WriteInt32LittleEndian(view, size);
 
             var rand = new Random();
-            for (int chance = (width == 1) ? 40 : 16; chance >= 0; chance--) {
+            for (int chance = (width == 1) ? 40 : 16; chance > 0; chance--) {
                 var seed = (uint)rand.NextInt64(1L << 32);
                 BinaryPrimitives.WriteUInt32LittleEndian(view[4..], seed);
                 graph.Init(seed, src);
