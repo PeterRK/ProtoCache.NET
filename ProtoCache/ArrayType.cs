@@ -24,7 +24,9 @@ namespace ProtoCache {
                 return;
             }
             var mark = data.GetUInt32();
-            if ((word != 0 && (mark & 3) != word) || (mark & 3) == 0) {
+            // C++ may use a one-word element width for any empty array alias.
+            bool emptyArray = mark == 1 || mark == 2;
+            if ((!emptyArray && word != 0 && (mark & 3) != word) || (mark & 3) == 0) {
                 throw new ArgumentException("illegal array");
             }
             size = (int)(mark >> 2);

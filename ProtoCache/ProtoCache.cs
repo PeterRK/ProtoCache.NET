@@ -73,7 +73,6 @@ namespace ProtoCache {
                     parts.Add(null);
                     continue;
                 }
-                var name = field.Name;
                 if (field.IsMap) {
                     parts.Add(SerializeMap(field, field.Accessor.GetValue(message)));
                 } else if (field.IsRepeated) {
@@ -91,7 +90,7 @@ namespace ProtoCache {
                     unit = new byte[4];
                     if (fields[0].IsMap) {
                         BinaryPrimitives.WriteUInt32LittleEndian(unit, (uint)5 << 28);
-                    } else {
+                    } else if (fields[0].FieldType != FieldType.Bool) {
                         BinaryPrimitives.WriteUInt32LittleEndian(unit, (uint)1);
                     }
                 }
@@ -215,7 +214,6 @@ namespace ProtoCache {
 
         private static byte[] Serialize(ByteString value) => Serialize(value.Span);
 
-        private static byte[] Serialize(byte[] value) => Serialize(value.AsSpan());
 
         private static byte[] Serialize(ReadOnlySpan<byte> value) {
             if (value.Length >= (1 << 28)) {
@@ -227,7 +225,7 @@ namespace ProtoCache {
         }
 
         private static byte[] CreateBytesUnit(int length, out int prefixSize) {
-            var tmp = new byte[5];
+            Span<byte> tmp = stackalloc byte[5];
             var mark = (uint)length << 2;
             int w = 0;
             while ((mark & ~0x7f) != 0) {
@@ -237,7 +235,7 @@ namespace ProtoCache {
             tmp[w++] = (byte)mark;
 
             var data = new byte[((w + length) + 3) & 0xfffffffc];
-            Array.Copy(tmp, 0, data, 0, w);
+            tmp[..w].CopyTo(data);
             prefixSize = w;
             return data;
         }
@@ -249,7 +247,8 @@ namespace ProtoCache {
                             return null;
                         }
                         var data = Serialize((IMessage)value);
-                        if (data.Length == 4) {
+                        // A short alias can fit in one word without being empty.
+                        if (data.Length == 4 && BinaryPrimitives.ReadUInt32LittleEndian(data) == 0) {
                             return null;
                         }
                         return data;
@@ -439,7 +438,7 @@ namespace ProtoCache {
         }
 
         private static BestArray DetectBestArray(byte[][] parts) {
-            var sizes = new long[] { 0, 0, 0 };
+            Span<long> sizes = stackalloc long[] { 0, 0, 0 };
             foreach (var one in parts) {
                 sizes[0] += 1;
                 sizes[1] += 2;

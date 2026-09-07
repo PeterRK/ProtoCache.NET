@@ -34,8 +34,10 @@ namespace ProtoCache {
             var mark = data.GetUInt32();
             keyWidth = (int)((mark >> 30) & 3) * 4;
             valueWidth = (int)((mark >> 28) & 3) * 4;
-            if ((keyWord != 0 && keyWidth != keyWord * 4) || keyWidth == 0
-                || (valueWord != 0 && valueWidth != valueWord * 4) || valueWidth == 0) {
+            // Empty maps have no entries whose widths need to match the schema.
+            if (keyWidth == 0 || valueWidth == 0
+                || (index.Size != 0 && ((keyWord != 0 && keyWidth != keyWord * 4)
+                    || (valueWord != 0 && valueWidth != valueWord * 4)))) {
                 throw new ArgumentException("illegal map");
             }
             body = data.Forward(bodyOffset);

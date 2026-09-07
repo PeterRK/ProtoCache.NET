@@ -13,6 +13,10 @@ namespace ProtoCache.Benchmark {
         private const int loop = 1000000;
 
         public static void Main(string[] args) {
+            if (args.Length > 0 && args[0] == "--evaluate") {
+                PerformanceEvaluation.Run(args[1..]);
+                return;
+            }
             var timer = new Stopwatch();
 
             var fixture = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "test.json"));
@@ -25,6 +29,7 @@ namespace ProtoCache.Benchmark {
                     "Run ProtoCache.Benchmark/generate-fixtures.sh before the benchmark.", fbPath);
             }
             var fbRaw = File.ReadAllBytes(fbPath);
+            ValidateFixtures(message, pcRaw, fbRaw);
 
             var raw = pcRaw;
             for (int i = 0; i < loop; i++) {
@@ -86,11 +91,54 @@ namespace ProtoCache.Benchmark {
             Console.Write("flatbuffers: {0} ns/op\n", timer.Elapsed.TotalNanoseconds / loop);
         }
 
-        private class Junk {
+        internal static void ValidateFixtures(pb.Main message, byte[] pcRaw, byte[] fbRaw) {
+            var expected = new Junk();
+            expected.Traverse(message);
+            var actual = new Junk();
+            actual.Traverse(new pc.Main(pcRaw));
+            expected.AssertEquivalent(actual);
+            actual = new Junk();
+            actual.Traverse(fb.Main.GetRootAsMain(new Google.FlatBuffers.ByteBuffer(fbRaw)));
+            expected.AssertEquivalent(actual);
+
+            // Unequal row lengths catch using the outer dimension in the inner loop.
+            float[][] rows = [[], [1.25f], [2.5f, -3.75f, 4.5f, 8f]];
+            var matrix = new pb.Vec2D();
+            var builder = new Google.FlatBuffers.FlatBufferBuilder(128);
+            var offsets = new Google.FlatBuffers.Offset<fb.Vec1D>[rows.Length];
+            for (int i = 0; i < rows.Length; i++) {
+                var row = new pb.Vec2D.Types.Vec1D();
+                row.X.Add(rows[i]);
+                matrix.X.Add(row);
+                offsets[i] = fb.Vec1D.CreateVec1D(builder, fb.Vec1D.Create_Vector(builder, rows[i]));
+            }
+            var vector = fb.Vec2D.Create_Vector(builder, offsets);
+            builder.Finish(fb.Vec2D.CreateVec2D(builder, vector).Value);
+            expected = new Junk();
+            expected.Traverse(matrix);
+            actual = new Junk();
+            var pcMatrix = new pc.Vec2D();
+            pcMatrix.Init(new DataView(ProtoCache.Serialize(matrix)));
+            actual.Traverse(pcMatrix);
+            expected.AssertEquivalent(actual);
+            actual = new Junk();
+            actual.Traverse(fb.Vec2D.GetRootAsVec2D(builder.DataBuffer));
+            expected.AssertEquivalent(actual);
+        }
+
+        internal sealed class Junk {
             private int i32 = 0;
             private float f32 = 0;
             private long i64 = 0;
             private double f64 = 0;
+
+            public void AssertEquivalent(Junk other) {
+                if (i32 != other.i32 || i64 != other.i64 ||
+                    Math.Abs(f32 - other.f32) > 1e-5 * Math.Max(1, Math.Abs(f32)) ||
+                    Math.Abs(f64 - other.f64) > 1e-10 * Math.Max(1, Math.Abs(f64))) {
+                    throw new InvalidOperationException("Traversal checksums differ");
+                }
+            }
 
             public void Print() => Console.Write("{0:X} {1:X}, {2}, {3}\n", i32, i64, f32, f64);
 
@@ -110,12 +158,6 @@ namespace ProtoCache.Benchmark {
                     return;
                 }
                 i32 += v.GetHashCode();
-            }
-            private void Consume(byte[] v) {
-                if (v == null) {
-                    return;
-                }
-                i32 += v.Length;
             }
             private void Consume(ReadOnlySpan<byte> v) {
                 i32 += v.Length;
@@ -214,10 +256,10 @@ namespace ProtoCache.Benchmark {
                 }
             }
 
-            void Traverse(pc.Vec2D vec) {
+            internal void Traverse(pc.Vec2D vec) {
                 for (int i = 0; i < vec.Size; i++) {
                     var line = vec.Get(i, tmpVec1D);
-                    for (int j = 0; j < vec.Size; j++) {
+                    for (int j = 0; j < line.Size; j++) {
                         Consume(line.Get(j));
                     }
                 }
@@ -237,7 +279,7 @@ namespace ProtoCache.Benchmark {
                 Consume(root.Flag);
                 Consume((int)root.Mode);
                 Consume(root.Str);
-                Consume(root.Data.ToByteArray());
+                Consume(root.Data.Span);
                 Consume(root.F32);
                 Consume(root.F64);
                 Traverse(root.Object);
@@ -260,7 +302,7 @@ namespace ProtoCache.Benchmark {
                     Consume(u);
                 }
                 foreach (var u in root.Datav) {
-                    Consume(u.ToByteArray());
+                    Consume(u.Span);
                 }
                 foreach (var u in root.F32V) {
                     Consume(u);
@@ -309,7 +351,7 @@ namespace ProtoCache.Benchmark {
                 }
             }
 
-            void Traverse(pb.Vec2D vec) {
+            internal void Traverse(pb.Vec2D vec) {
                 foreach (var u in vec.X) {
                     foreach (var v in u.X) {
                         Consume(v);
@@ -409,10 +451,10 @@ namespace ProtoCache.Benchmark {
                 }
             }
 
-            void Traverse(fb.Vec2D vec) {
+            internal void Traverse(fb.Vec2D vec) {
                 for (int i = 0; i < vec._Length; i++) {
                     var line = vec._(i).Value;
-                    for (int j = 0; j < vec._Length; j++) {
+                    for (int j = 0; j < line._Length; j++) {
                         Consume(line._(j));
                     }
                 }

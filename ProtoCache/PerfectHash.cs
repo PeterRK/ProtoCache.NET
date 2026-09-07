@@ -111,7 +111,9 @@ namespace ProtoCache {
             BinaryPrimitives.WriteInt32LittleEndian(view, size);
 
             var rand = new Random();
-            for (int chance = (width == 1) ? 40 : 16; chance > 0; chance--) {
+            // Small graphs can need many seeds even when the index uses wider entries.
+            // Stop at the first success; the budget must not shrink at 256 keys.
+            for (int chance = 40; chance > 0; chance--) {
                 var seed = (uint)rand.NextInt64(1L << 32);
                 BinaryPrimitives.WriteUInt32LittleEndian(view[4..], seed);
                 graph.Init(seed, src);
@@ -151,6 +153,8 @@ namespace ProtoCache {
             throw new Exception("fail to build perfect-hash");
         }
 
+        /// <summary>Builds an index from stable, unique key bytes.</summary>
+        /// <remarks>The seed search is bounded. If no graph can be built, this method throws.</remarks>
         public static PerfectHash Build(IKeySource src) {
             int size = src.Total();
             if (size < 0 || size > 0xfffffff) {
@@ -217,17 +221,26 @@ namespace ProtoCache {
         }
 
         private sealed class Graph {
+            // Small/medium graphs use blocks below the LOH threshold. Large graphs
+            // already need large temporary buffers and benefit from one contiguous block.
+            private readonly int edgeShift;
+            private readonly int edgeMask;
             public Vertex[][] edges;
             public int[] nodes;
 
             public Graph(int size) {
-                edges = new Vertex[size][];
-                for (int i = 0; i < size; i++) {
-                    edges[i] = new Vertex[3];
+                edgeShift = size > 0xffff ? 30 : 11;
+                edgeMask = (1 << edgeShift) - 1;
+                edges = new Vertex[(size + edgeMask) >> edgeShift][];
+                for (int i = 0; i < edges.Length; i++) {
+                    edges[i] = new Vertex[Math.Min(1 << edgeShift, size - (i << edgeShift)) * 3];
                 }
                 var section = CalcSectionSize(size);
                 nodes = new int[section * 3];
             }
+
+            private Span<Vertex> Edge(int index) => edges[index >> edgeShift].AsSpan((index & edgeMask) * 3, 3);
+            private ref Vertex At(int index, int offset) => ref edges[index >> edgeShift][(index & edgeMask) * 3 + offset];
 
             private static bool TestAndSet(BitArray book, int pos) {
                 if (book.Get(pos)) {
@@ -243,14 +256,14 @@ namespace ProtoCache {
                 var total = src.Total();
                 src.Reset();
                 for (int i = 0; i < total; i++) {
-                    Vertex[] edge = edges[i];
+                    var edge = Edge(i);
                     CalcSlots(seed, section, src.Next(), out edge[0].slot, out edge[1].slot, out edge[2].slot);
                     for (int j = 0; j < 3; j++) {
                         edge[j].prev = -1;
                         edge[j].next = nodes[edge[j].slot];
                         nodes[edge[j].slot] = i;
                         if (edge[j].next != -1) {
-                            edges[edge[j].next][j].prev = i;
+                            At(edge[j].next, j).prev = i;
                         }
                     }
                 }
@@ -260,8 +273,8 @@ namespace ProtoCache {
                 book.SetAll(false);
 
                 int tail = 0;
-                for (int i = edges.Length - 1; i >= 0; i--) {
-                    Vertex[] edge = edges[i];
+                for (int i = free.Length - 1; i >= 0; i--) {
+                    var edge = Edge(i);
                     for (int j = 0; j < 3; j++) {
                         if (edge[j].prev == -1 && edge[j].next == -1 && TestAndSet(book, i)) {
                             free[tail++] = i;
@@ -271,21 +284,21 @@ namespace ProtoCache {
 
                 for (int head = 0; head < tail; head++) {
                     var curr = free[head];
-                    Vertex[] edge = edges[curr];
+                    var edge = Edge(curr);
                     for (int j = 0; j < 3; j++) {
                         var i = -1;
                         if (edge[j].prev != -1) {
                             i = edge[j].prev;
-                            edges[i][j].next = edge[j].next;
+                            At(i, j).next = edge[j].next;
                         }
                         if (edge[j].next != -1) {
                             i = edge[j].next;
-                            edges[i][j].prev = edge[j].prev;
+                            At(i, j).prev = edge[j].prev;
                         }
                         if (i == -1) {
                             continue;
                         }
-                        if (edges[i][j].prev == -1 && edges[i][j].next == -1 && TestAndSet(book, i)) {
+                        if (At(i, j).prev == -1 && At(i, j).next == -1 && TestAndSet(book, i)) {
                             free[tail++] = i;
                         }
                     }
@@ -299,7 +312,7 @@ namespace ProtoCache {
                 data.Fill(byte.MaxValue);
 
                 for (int i = free.Length - 1; i >= 0; i--) {
-                    Vertex[] edge = edges[free[i]];
+                    var edge = Edge(free[i]);
                     int a = edge[0].slot;
                     int b = edge[1].slot;
                     int c = edge[2].slot;

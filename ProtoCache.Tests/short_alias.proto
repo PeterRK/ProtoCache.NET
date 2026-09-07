@@ -1,0 +1,17 @@
+syntax = "proto3";
+option csharp_namespace = "ProtoCache.Tests.pb";
+package short_alias;
+
+message BoolAlias { repeated bool _x_ = 1; }
+message LongAlias { repeated int64 _x_ = 1; }
+message LongMapAlias { map<int64, int64> _x_ = 1; }
+
+message AliasHolder {
+  BoolAlias flags = 1;
+  repeated BoolAlias rows = 2;
+  map<int32, BoolAlias> entries = 3;
+  LongAlias longs = 4;
+  LongMapAlias long_map = 5;
+  repeated LongAlias long_rows = 6;
+  repeated LongMapAlias map_rows = 7;
+}

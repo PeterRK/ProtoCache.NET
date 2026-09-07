@@ -5,3 +5,4 @@ TestResults/
 *.suo
 ProtoCache.Benchmark/test.fb
 artifacts/
+ProtoCache.Benchmark/results/
