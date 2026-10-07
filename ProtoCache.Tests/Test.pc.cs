@@ -341,7 +341,15 @@ public class Deprecated : global::ProtoCache.IUnit {
 		public int Val => _core_.GetInt32(_val);
 	}
 
-	public void Init(DataView data) => throw new NotImplementedException();
+
+	private global::ProtoCache.Message _core_;
+	public Deprecated() {}
+	public Deprecated(byte[] data) => Init(new global::ProtoCache.DataView(data));
+	public bool HasField(ushort id) => _core_.HasField(id);
+	public void Init(global::ProtoCache.DataView data) {
+		_core_.Init(data);
+	}
+
 }
 
 }

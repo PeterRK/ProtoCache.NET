@@ -10,7 +10,13 @@ namespace ProtoCache {
             uint mark = 0;
             int off = 0;
             for (int sft = 0; sft < 32; sft += 7) {
+                if (off >= data.Length) {
+                    break;
+                }
                 byte b = data[off++];
+                if (sft == 28 && (b & 0xf0) != 0) {
+                    break;
+                }
                 mark |= ((uint)b & 0x7f) << sft;
                 if ((b & 0x80) == 0) {
                     if ((mark & 3) != 0) {

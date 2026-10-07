@@ -59,9 +59,15 @@ namespace ProtoCache {
             if ((maxId - originFields.Count) > 6 && maxId > originFields.Count * 2) {
                 throw new ArgumentException(string.Format("message {0} is too sparse", descriptor.FullName));
             }
+            bool isAlias = originFields.Count == 1
+                && (originFields[0].Name.Equals("_") || originFields[0].Name.Equals("_x_"));
+            if (isAlias && (!originFields[0].IsRepeated || originFields[0].FieldNumber != 1)) {
+                throw new ArgumentException(string.Format(
+                    "container alias must be repeated and numbered 1: {0}", descriptor.FullName));
+            }
             var fields = new FieldDescriptor[maxId];
             foreach (var field in originFields) {
-                if (field.GetOptions()?.Deprecated == true) {
+                if (!isAlias && field.GetOptions()?.Deprecated == true) {
                     continue;
                 }
                 fields[field.FieldNumber - 1] = field;
@@ -82,8 +88,7 @@ namespace ProtoCache {
                 }
             }
 
-            if (fields.Length == 1 && fields[0] != null
-                && (fields[0].Name.Equals("_") || fields[0].Name.Equals("_x_"))) {
+            if (isAlias) {
                 // trim message wrapper
                 var unit = parts[0];
                 if (unit == null) {
@@ -225,6 +230,9 @@ namespace ProtoCache {
         }
 
         private static byte[] CreateBytesUnit(int length, out int prefixSize) {
+            if ((uint)length >= (1U << 30)) {
+                throw new ArgumentException("too long string");
+            }
             Span<byte> tmp = stackalloc byte[5];
             var mark = (uint)length << 2;
             int w = 0;

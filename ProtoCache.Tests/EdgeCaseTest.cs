@@ -55,9 +55,11 @@ namespace ProtoCache.Tests {
 
             raw = ProtoCache.Serialize(new pb.Deprecated { Junk = 123 });
             view.Init(new DataView(raw));
+            var deprecated = new pc.Deprecated(raw);
             Assert.Multiple(() => {
                 Assert.That(raw, Has.Length.EqualTo(4));
                 Assert.That(view.HasField(0), Is.False);
+                Assert.That(deprecated.HasField(0), Is.False);
             });
         }
         #pragma warning restore CS0612

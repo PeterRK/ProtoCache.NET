@@ -2,10 +2,54 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 using Google.Protobuf;
+using Google.Protobuf.Reflection;
+using System.Reflection;
 
 namespace ProtoCache.Tests;
 
 public class SerializationBoundaryTest {
+    [TestCase(1 << 30)]
+    [TestCase(int.MaxValue)]
+    public void UnrepresentableByteLengthsAreRejectedBeforeAllocation(int length) {
+        // Check the wire limit without allocating a gigabyte-sized input string.
+        var create = typeof(ProtoCache).GetMethod("CreateBytesUnit",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        var exception = Assert.Throws<TargetInvocationException>(() => create.Invoke(null, [length, 0]));
+        Assert.That(exception!.InnerException, Is.TypeOf<ArgumentException>());
+    }
+
+    [TestCase("_", 1, false)]
+    [TestCase("_x_", 1, false)]
+    [TestCase("_", 2, true)]
+    [TestCase("_x_", 2, true)]
+    public void InvalidAliasSchemasAreRejectedBeforeFieldAccess(string name, int number, bool repeated) {
+        var schema = new FileDescriptorProto {
+            Name = "invalid_alias.proto",
+            Syntax = "proto3",
+            MessageType = { new DescriptorProto {
+                Name = "Alias",
+                Field = { new FieldDescriptorProto {
+                    Name = name,
+                    Number = number,
+                    Type = FieldDescriptorProto.Types.Type.Int32,
+                    Label = repeated ? FieldDescriptorProto.Types.Label.Repeated
+                        : FieldDescriptorProto.Types.Label.Optional
+                } }
+            } }
+        };
+        var descriptor = FileDescriptor.BuildFromByteStrings([schema.ToByteString()])
+            .Single().MessageTypes.Single();
+        Assert.That(() => ProtoCache.Serialize(new SchemaOnlyMessage(descriptor)),
+            Throws.TypeOf<ArgumentException>().With.Message.Contains("container alias"));
+    }
+
+    private sealed class SchemaOnlyMessage(MessageDescriptor descriptor) : IMessage {
+        public MessageDescriptor Descriptor => descriptor;
+        public int CalculateSize() => throw new NotSupportedException();
+        public void MergeFrom(CodedInputStream input) => throw new NotSupportedException();
+        public void WriteTo(CodedOutputStream output) => throw new NotSupportedException();
+    }
+
     [TestCase(0)]
     [TestCase(1)]
     [TestCase(3)]
